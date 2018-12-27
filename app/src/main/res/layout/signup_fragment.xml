@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal|center_vertical">
+
+    <EditText
+        android:id="@+id/edSignUpEmail"
+        style="@style/text_default_style"
+        android:lines="1"
+        android:maxLines="1"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:drawableStart="@drawable/icon_user"
+        android:drawableEnd="@drawable/icon_alert"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        />
+
+    <EditText
+        android:id="@+id/edSignUpPassword"
+        style="@style/text_default_style"
+        android:lines="1"
+        android:maxLines="1"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:drawableStart="@drawable/icon_password"
+        android:drawableEnd="@drawable/icon_alert"
+        android:layout_weight="1"
+        />
+
+    <EditText
+        android:id="@+id/edSignUpPasswordConfirm"
+        style="@style/text_default_style"
+        android:lines="1"
+        android:maxLines="1"
+        android:hint="@string/confim_password"
+        android:inputType="textPassword"
+        android:drawableStart="@drawable/icon_password"
+        android:drawableEnd="@drawable/icon_alert"
+        android:layout_weight="1"
+        />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        style="@style/text_default_style"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        >
+
+        <CheckBox
+            android:id="@+id/ckbAgreeTerm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Agree with " />
+
+        <TextView
+            android:id="@+id/tvTermPolicy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/term_policy"
+            android:textColor="@color/text_link" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnRegister"
+        style="@style/text_default_style"
+        android:text="@string/register"
+        android:background="@color/yellow"
+        android:textStyle="bold"
+        android:layout_weight="1"
+        />
+
+</LinearLayout>

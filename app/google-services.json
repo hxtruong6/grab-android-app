@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "34625605963",
+    "firebase_url": "https://grabapp-d7f3d.firebaseio.com",
+    "project_id": "grabapp-d7f3d",
+    "storage_bucket": "grabapp-d7f3d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:34625605963:android:32a74c46276b71e1",
+        "android_client_info": {
+          "package_name": "com.example.hxtruong.grabbikeapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "34625605963-obisi264qn0074odk5tr3lqm71g9pff9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hxtruong.grabbikeapp",
+            "certificate_hash": "1931248e8749a4767cdae46bf2813da6dd618e0c"
+          }
+        },
+        {
+          "client_id": "34625605963-074kb2u4jlfg8429v3r8n6uvl3apd1vf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_y24tb2jiIKMF56numvR3K0fmyktBHKQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "34625605963-074kb2u4jlfg8429v3r8n6uvl3apd1vf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
