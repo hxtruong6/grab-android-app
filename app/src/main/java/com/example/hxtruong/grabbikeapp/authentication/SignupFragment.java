@@ -90,7 +90,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
         edPasswordConfirm.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus && !checkConfimPassword )
+                if(!hasFocus && !checkConfimPassword && !btnRegister.isEnabled())
                         MyHelper.toast(getContext(), "Confirm password is not matched.");
             }
         });
@@ -124,7 +124,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
         edPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus && !checkPassword)
+                if(!hasFocus && !checkPassword && !btnRegister.isEnabled())
                     MyHelper.toast(getContext(), "Password is at least "+ String.valueOf(Definition.MINIMUM_PASSWORD_LENGTH)+" characters");
             }
         });
@@ -156,7 +156,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
         edEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus && !checkEmail)
+                if(!hasFocus && !checkEmail && !btnRegister.isEnabled())
                     MyHelper.toast(getContext(), "Email is invalid.");
             }
         });

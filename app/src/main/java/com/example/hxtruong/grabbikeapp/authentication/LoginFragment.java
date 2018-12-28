@@ -96,7 +96,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         edPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus && !checkPassword && !checkLoginWithThirdOrg)
+                if(!hasFocus && !checkPassword && !checkLoginWithThirdOrg && !btnLogin.isEnabled())
                     MyHelper.toast(getContext(), "Password is at least "+ String.valueOf(Definition.MINIMUM_PASSWORD_LENGTH)+" characters");
             }
         });
@@ -129,7 +129,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         edUsername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus && !checkUsername && !checkLoginWithThirdOrg)
+                if(!hasFocus && !checkUsername && !checkLoginWithThirdOrg && !btnLogin.isEnabled())
                     MyHelper.toast(getContext(), "Email is invalid.");
             }
         });

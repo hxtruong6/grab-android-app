@@ -2,8 +2,15 @@ package core.user;
 
 import android.location.Location;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Booking {
-    String strUID;
-    Location locStart;
-    Location locEnd;
+    public Location mStartLocation;
+    public Location mEndLocation;
+
+    public Booking(Location startLocation, Location endLocation) {
+        mStartLocation = startLocation;
+        mEndLocation = endLocation;
+    }
 }
