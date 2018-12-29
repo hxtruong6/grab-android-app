@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
 import com.example.hxtruong.grabbikeapp.authentication.Authentication;
 import com.google.firebase.auth.FirebaseAuth;
@@ -80,5 +81,14 @@ public class MainActivity extends AppCompatActivity {
             mAuth.signOut();
             login();
         }
+    }
+
+    public void goToDriver(View view) {
+    }
+
+    public void gotToCustomer(View view) {
+        Intent intent = new Intent(MainActivity.this, CustomerMapActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
