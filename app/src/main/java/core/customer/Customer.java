@@ -2,6 +2,8 @@ package core.customer;
 
 import android.location.Location;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import core.Booking;
 import core.driver.Driver;
 import core.helper.FirebaseHelper;
@@ -9,6 +11,7 @@ import core.helper.MyHelper;
 
 public class Customer {
     private static final Customer ourInstance = new Customer();
+
     public static Customer getInstance() {
         return ourInstance;
     }
@@ -21,6 +24,9 @@ public class Customer {
     Location mStartLoction;
     Location mEndLocation;
 
+    public LatLng pickupLocation;
+    public String driverFoundId;
+
     private Customer() {
         initUserData();
     }
@@ -31,34 +37,37 @@ public class Customer {
         mEndLocation = MyHelper.createLocation(2.2f, .9f);
     }
 
-    public void registerIUserInterface(IUserListener listener){
+    public void registerIUserInterface(IUserListener listener) {
         mListener = listener;
     }
 
-
-
-    public void sendBookingRequest(){
-            Booking booking = new Booking(mStartLoction, mEndLocation);
-            FirebaseHelper.sendBookingLocation(booking);
+    // Truong
+    public void sendBookingRequest() {
+        //Booking booking = new Booking(mStartLoction, mEndLocation);
+        // TODO: send the booking later. Just simple for now
+        FirebaseHelper.sendBookingLocation(mLastKnownLocation);
     }
 
-    public void updateMyLocation(Location loc){
-          mLastKnownLocation = loc;
+    public void updateMyLocation(Location loc) {
+        mLastKnownLocation = loc;
 
-          //.updateUserLocation(loc);
-          if(mListener!=null)
+        //.updateUserLocation(loc);
+        if (mListener != null)
             mListener.onMyLocationChanged(loc);
     }
 
-    public void receiveBookingResultFromFirebase(Driver driver){
-
-        if(mListener!=null)
+    // Truong
+    public void receiveBookingResultFromFirebase(Driver driver) {
+        FirebaseHelper.receiveBookingResultFromFirebase();
+        if (mListener != null)
             mListener.onBookingResult(driver);
+        // TODO: show info driver on screeen UI
     }
 
-    public void receiveDriverLocationFromFirebase(){
-
-        if(mListener!=null)
+    // Truong
+    public void receiveDriverLocationFromFirebase(LatLng driverLatLng) {
+        // this function is auto called from FirebaseHelper after find a driver
+        if (mListener != null)
             mListener.onDriverLocationChanged();
     }
 
@@ -66,7 +75,9 @@ public class Customer {
     //Interface
     public interface IUserListener {
         void onMyLocationChanged(Location loc);
+
         void onDriverLocationChanged();
+
         void onBookingResult(Driver driver);
     }
 
