@@ -1,14 +1,15 @@
-package core.user;
+package core.customer;
 
 import android.location.Location;
 
+import core.Booking;
 import core.driver.Driver;
 import core.helper.FirebaseHelper;
 import core.helper.MyHelper;
 
-public class User {
-    private static final User ourInstance = new User();
-    public static User getInstance() {
+public class Customer {
+    private static final Customer ourInstance = new Customer();
+    public static Customer getInstance() {
         return ourInstance;
     }
 
@@ -20,7 +21,7 @@ public class User {
     Location mStartLoction;
     Location mEndLocation;
 
-    private User() {
+    private Customer() {
         initUserData();
     }
 
@@ -44,7 +45,7 @@ public class User {
     public void updateMyLocation(Location loc){
           mLastKnownLocation = loc;
 
-          FirebaseHelper.updateUserLocation(loc);
+          //.updateUserLocation(loc);
           if(mListener!=null)
             mListener.onMyLocationChanged(loc);
     }

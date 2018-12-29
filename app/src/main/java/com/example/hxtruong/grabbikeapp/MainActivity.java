@@ -11,14 +11,12 @@ import com.example.hxtruong.grabbikeapp.authentication.Authentication;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.Random;
-
 import core.Definition;
+import core.customer.Customer;
 import core.driver.Driver;
 import core.helper.MyHelper;
-import core.user.User;
 
-public class MainActivity extends AppCompatActivity implements User.IUserListener
+public class MainActivity extends AppCompatActivity implements Customer.IUserListener
 {
     public FirebaseAuth mAuth;
     public FirebaseUser firebaseUser;
@@ -28,19 +26,19 @@ public class MainActivity extends AppCompatActivity implements User.IUserListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
-        User.getInstance().registerIUserInterface(this);
+        Customer.getInstance().registerIUserInterface(this);
 
         findViewById(R.id.btnBook).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              User.getInstance().sendBookingRequest();
+              Customer.getInstance().sendBookingRequest();
             }
         });
 
         findViewById(R.id.btnCreateGPS).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                User.getInstance().updateMyLocation(MyHelper.createRandomLocation());
+                Customer.getInstance().updateMyLocation(MyHelper.createRandomLocation());
             }
         });
     }
@@ -117,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements User.IUserListene
     @Override
     public void onMyLocationChanged(Location loc) {
         // Cập nhật vị trí customer
-        MyHelper.toast(getApplicationContext(), "changed location: "+ User.getInstance().mLastKnownLocation.toString());
+        MyHelper.toast(getApplicationContext(), "changed location: "+ Customer.getInstance().mLastKnownLocation.toString());
     }
 
 

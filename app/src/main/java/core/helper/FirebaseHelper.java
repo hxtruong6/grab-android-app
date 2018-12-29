@@ -4,10 +4,8 @@ import android.location.Location;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
-import core.user.Booking;
+import core.Booking;
 
 public class FirebaseHelper {
 
@@ -50,7 +48,7 @@ public class FirebaseHelper {
         */
 
         // reference.onChanged(){
-        //     User.getInstance().getUpdateDriverLocation(loc);
+        //     Customer.getInstance().getUpdateDriverLocation(loc);
         // }
 
         return MyHelper.createLocation(lat, lng);
