@@ -113,20 +113,31 @@ public class MainActivity extends AppCompatActivity implements User.IUserListene
         startActivity(intent);
         finish();
     }
+    
     @Override
     public void onMyLocationChanged(Location loc) {
-        //Update User location
+        // Cập nhật vị trí customer
         MyHelper.toast(getApplicationContext(), "changed location: "+ User.getInstance().mLastKnownLocation.toString());
     }
 
+
     @Override
-    public void onDriverLocationChanged() {
-        //Update Driver Location
+    public void onSendingBookingRequest(){
+        // Đang gửi request lên server 
+        // Bật màn hình chờ lên
     }
 
     @Override
     public void onBookingResult(Driver driver) {
-        //show driver infor and prepare start trip
+        // Đã nhận được driver
+        // Bắt đầu cập nhận vị trí driver
+
+    }
+
+    
+    @Override
+    public void onDriverLocationChanged(Location loc) {
+        // Cập nhật vị trris driver
 
     }
 }

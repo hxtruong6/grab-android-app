@@ -20,22 +20,40 @@ public class FirebaseHelper {
     }
 
     public static void sendBookingLocation(Booking booking) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("booking").child(getUid());
+       //Trường DO cái này
+       /*
+       - Viết vào customerRequsest
+        - Hàm này là customer bắt đầu gủi request lên server, t có truyền vào cái Booking (startLocation với end location)
+        - Ghi requset lên server
+        - lấy Uid nhanh: String strID = getUid();
 
-        myRef.child("startLocation").child("lat").setValue(booking.mStartLocation.getLatitude());
-        myRef.child("startLocation").child("long").setValue(booking.mStartLocation.getLongitude());
-        myRef.child("endLocation").child("lat").setValue(booking.mEndLocation.getLatitude());
-        myRef.child("endLocation").child("long").setValue(booking.mEndLocation.getLongitude());
+       */
+        
+    }
+
+    public static Driver receiveBookingResultFromFirebase(){
+        /*Trường
+        - Tìm 1 driver gần nhất
+        - 
+        - Hàm này trả về Driver đã nhận chuyenr mới gửi lên server
+        - Trong này m đặt listener database, tạo query gì gì như bên SimCode làm
+        - Chuyển availabe driver -> working driver
+        - Xóa customerRequest
+        */
+
 
     }
 
-    public  static  void updateUserLocation(Location loc){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("booking").child(getUid()).child("currentLocation");
+    public static Location getUpdateDriverLocation(String driverId){
+        /*
+        * Đặt reference tới workingDriver/driverUID/currentlocation
+        */
 
-        myRef.child("lat").setValue(loc.getLatitude());
-        myRef.child("long").setValue(loc.getLongitude());
+        // reference.onChanged(){
+        //     User.getInstance().getUpdateDriverLocation(loc);
+        // }
+
+        return MyHelper.createLocation(lat, lng);
     }
 
     private static String getUid() {
