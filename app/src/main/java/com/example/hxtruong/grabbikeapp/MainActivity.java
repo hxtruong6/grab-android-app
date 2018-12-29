@@ -11,8 +11,6 @@ import com.example.hxtruong.grabbikeapp.authentication.Authentication;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.Random;
-
 import core.Definition;
 import core.driver.Driver;
 import core.helper.MyHelper;
@@ -40,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements User.IUserListene
         findViewById(R.id.btnCreateGPS).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                User.getInstance().updateMyLocation(MyHelper.createRandomLocation());
+                User.getInstance().updateUserLocation(MyHelper.createRandomLocation());
             }
         });
     }
@@ -120,14 +118,7 @@ public class MainActivity extends AppCompatActivity implements User.IUserListene
         MyHelper.toast(getApplicationContext(), "changed location: "+ User.getInstance().mLastKnownLocation.toString());
     }
 
-
-    @Override
-    public void onSendingBookingRequest(){
-        // Đang gửi request lên server 
-        // Bật màn hình chờ lên
-    }
-
-    @Override
+       @Override
     public void onBookingResult(Driver driver) {
         // Đã nhận được driver
         // Bắt đầu cập nhận vị trí driver

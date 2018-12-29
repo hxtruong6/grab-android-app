@@ -33,10 +33,7 @@ public class MyHelper {
     }
 
     public static Location createRandomLocation() {
-        Location loc = new Location("dummyprovider");
         Random rnd = new Random();
-        loc.setLatitude(rnd.nextDouble());
-        loc.setLongitude(rnd.nextDouble());
-        return loc;
+        return createLocation(rnd.nextDouble(), rnd.nextDouble());
     }
 }

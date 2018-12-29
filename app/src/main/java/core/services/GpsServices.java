@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-import core.helper.MyHelper;
 import core.user.User;
 
 public class GpsServices extends Service {
@@ -34,7 +33,7 @@ public class GpsServices extends Service {
             Log.e(TAG, "onLocationChanged: " + location);
             mLastLocation.set(location);
 
-            User.getInstance().updateMyLocation(mLastLocation);
+            User.getInstance().updateUserLocation(mLastLocation);
         }
 
         @Override
