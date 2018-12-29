@@ -1,6 +1,7 @@
 package com.example.hxtruong.grabbikeapp;
 
 import android.content.Intent;
+import android.location.Location;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,10 +11,15 @@ import com.example.hxtruong.grabbikeapp.authentication.Authentication;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import core.Definition;
-import core.helper.MyHelper;
+import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+import core.Definition;
+import core.driver.Driver;
+import core.helper.MyHelper;
+import core.user.User;
+
+public class MainActivity extends AppCompatActivity implements User.IUserListener
+{
     public FirebaseAuth mAuth;
     public FirebaseUser firebaseUser;
 
@@ -22,6 +28,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
+        User.getInstance().registerIUserInterface(this);
+
+        findViewById(R.id.btnBook).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              User.getInstance().sendBookingRequest();
+            }
+        });
+
+        findViewById(R.id.btnCreateGPS).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                User.getInstance().updateMyLocation(MyHelper.createRandomLocation());
+            }
+        });
     }
 
     @Override
@@ -83,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     public void goToDriver(View view) {
     }
 
@@ -90,5 +112,21 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, CustomerMapActivity.class);
         startActivity(intent);
         finish();
+    }
+    @Override
+    public void onMyLocationChanged(Location loc) {
+        //Update User location
+        MyHelper.toast(getApplicationContext(), "changed location: "+ User.getInstance().mLastKnownLocation.toString());
+    }
+
+    @Override
+    public void onDriverLocationChanged() {
+        //Update Driver Location
+    }
+
+    @Override
+    public void onBookingResult(Driver driver) {
+        //show driver infor and prepare start trip
+
     }
 }

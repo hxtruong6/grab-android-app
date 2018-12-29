@@ -6,16 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello Bullshit World!"
+        android:id="@+id/btnBook"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
+
         android:id="@+id/driver"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,5 +39,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/driver" />
 
+    <Button
+        android:id="@+id/btnCreateGPS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create GPS"
+        app:layout_constraintBottom_toBottomOf="@id/btnBook"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25" />
 
 </android.support.constraint.ConstraintLayout>

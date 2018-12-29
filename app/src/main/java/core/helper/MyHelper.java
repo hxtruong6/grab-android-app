@@ -3,9 +3,12 @@ package core.helper;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
+
+import java.util.Random;
 
 public class MyHelper {
     public static void toast(Context context, String message){
@@ -21,5 +24,19 @@ public class MyHelper {
             }
         }
         return true;
+    }
+    public static Location createLocation(float lat, float lng) {
+        Location loc = new Location("dummyprovider");
+        loc.setLatitude(lat);
+        loc.setLongitude(lng);
+        return loc;
+    }
+
+    public static Location createRandomLocation() {
+        Location loc = new Location("dummyprovider");
+        Random rnd = new Random();
+        loc.setLatitude(rnd.nextDouble());
+        loc.setLongitude(rnd.nextDouble());
+        return loc;
     }
 }
