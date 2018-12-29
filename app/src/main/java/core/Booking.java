@@ -1,4 +1,4 @@
-package core.user;
+package core;
 
 import android.location.Location;
 
