@@ -1,6 +1,8 @@
 package core.helper;
 
 import android.location.Location;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -17,7 +19,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import core.customer.Customer;
 import core.driver.Driver;
@@ -32,7 +33,7 @@ public class FirebaseHelper {
         return FirebaseAuth.getInstance().getCurrentUser();
     }
 
-    public static void sendBookingLocation(Booking booking) {
+    public static void sendBookingLocation(Location pickupLoc) {
        //Trường DO cái này
        /*
        - Viết vào customerRequsest
@@ -62,14 +63,14 @@ public class FirebaseHelper {
 
     }
 
-    private static int radius = 1;
+    private static int radius = 1000000000;
     private static Boolean driverFound = false;
     private static String driverFoundId;
 
     static GeoQuery geoQuery;
 
     // Truong
-    public static void receiveBookingResultFromFirebase() {
+    public static String receiveBookingResultFromFirebase() {
         /*Trường
         //- Tìm 1 driver gần nhất
         - 
@@ -93,7 +94,7 @@ public class FirebaseHelper {
                     Customer.getInstance().driverFoundId = key;
                     //DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundId);
                     // this function use put customerRequestId to availbleDriver field
-                    DatabaseReference availableDriverRef = FirebaseDatabase.getInstance().getReference().child("availableDriver").child(driverFoundId);
+                    DatabaseReference availableDriverRef = FirebaseDatabase.getInstance().getReference().child("driversAvailable").child(driverFoundId);
                     // TODO: what Uid here????
                     String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     HashMap map = new HashMap();
@@ -130,9 +131,7 @@ public class FirebaseHelper {
             }
         });
 
-        // Call getUpdateDriverLocation to update driver location for customer UI
-        getUpdateDriverLocation(driverFoundId);
-
+        return driverFoundId;
     }
 
     // Truong
@@ -140,7 +139,7 @@ public class FirebaseHelper {
         /*
          * Đặt reference tới workingDriver/driverUID/currentlocation
          */
-        DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("workingDriver").child(driverId);
+        DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverId);
         assignedCustomerRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -155,9 +154,10 @@ public class FirebaseHelper {
                     if (map.get(1) != null) {
                         locationLng = Double.parseDouble(map.get(1).toString());
                     }
-                    LatLng driverLatLng = new LatLng(locationLat, locationLng);
+
+                    Location driverLocation = MyHelper.createLocation(locationLat, locationLng);
                     // send location to user by call a function in user when every location change
-                    Customer.getInstance().receiveDriverLocationFromFirebase(driverLatLng);
+                    Customer.getInstance().receiveDriverLocationFromFirebase(driverLocation);
                 }
             }
 
@@ -165,17 +165,143 @@ public class FirebaseHelper {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-
-
-        // reference.onChanged(){
-        //     Customer.getInstance().getUpdateDriverLocation(loc);
-        // }
-
-        //return MyHelper.createLocation(lat, lng);
-
     }
 
     private static String getUid() {
         return FirebaseHelper.getUser().getUid();
+    }
+
+    //Driver area
+    public static void updateDriverLocationToFirebase(Location loc, String path) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference(path).child(getUid()).child("location");
+
+        myRef.child("lat").setValue(loc.getLatitude());
+        myRef.child("lng").setValue(loc.getLongitude());
+    }
+
+    /* Đăng kí driver lên firebase mỗi khi mở app
+     * Ghi lên firebase/availableDriver: UID, current location
+     *
+     */
+//    public static void registerDriverToFirebase(Location currentLocation) {
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference myRef = database.getReference("driversAvailable").child(getUid());
+//
+//        myRef.child("customerRequestId").setValue("empty");
+//        myRef.child("location").child("lat").setValue(currentLocation.getLatitude());
+//        myRef.child("location").child("lng").setValue(currentLocation.getLongitude());
+
+        //tạm thời ghi lên driver ở đây, sau này đăng kí xong sẽ ghi lên
+//        DatabaseReference myRef2 = database.getReference("driver").child(getUid());
+//        myRef2.child("name").setValue("Anh tài xế tốt bụng");
+//        myRef2.child("email").setValue(getUser().getEmail());
+//        myRef2.child("vehicle").setValue("SH");
+   // }
+
+    public static void startListenCustomerRequest() {
+        final String driverId = "anhtaixe001";
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference myRef = database.getReference("driversAvailable").
+                child(driverId);
+
+        myRef.child("customerRequestId").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String customerRequestId = dataSnapshot.getValue(String.class);
+                Log.d("ListenCustomerRequest:", customerRequestId);
+
+                if(customerRequestId != null && !customerRequestId.isEmpty() && !customerRequestId.equals("empty")){
+                    //moveAvailableDriverToWorkingDriver(dataSnapshot);
+                    List<Object> map = (List<Object>) dataSnapshot.getValue();
+                    double locationLat = 0;
+                    double locationLng = 0;
+                    if (map.get(0) != null)
+                        locationLat = Double.parseDouble(map.get(0).toString());
+
+                    if (map.get(1) != null)
+                        locationLng = Double.parseDouble(map.get(1).toString());
+
+                    Location driverLocation = MyHelper.createLocation(locationLat, locationLng);
+                    registerDriverToFirebase(driverId, "driversWorking", driverLocation);
+
+                    Driver.getInstance().receiveAndStartTripWithCustomerRequest(customerRequestId);
+                    myRef.removeValue();
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public static void moveAvailableDriverToWorkingDriver(DataSnapshot dataSnapshot) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        DatabaseReference availableDriver = database.getReference("driversAvailable").child(getUid());
+
+        DatabaseReference workingDriver = database.getReference("driversWorking").child(getUid());
+        workingDriver.setValue(dataSnapshot);
+        availableDriver.removeValue();
+
+    }
+
+    public static String getDriverInfo(String driverId) {
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = database.getReference("drivers").child(driverId);
+        final String[] info = new String[]{"", "", ""};
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                info[0] = dataSnapshot.child("name").getValue(String.class);
+                info[1] = dataSnapshot.child("email").getValue(String.class);
+                info[2] = dataSnapshot.child("vehicle").getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        return info[0] + "; " + info[1] +"; "+info[2];
+    }
+
+    public static void registerCustomerToFirebase() {
+        //tạm thời ghi lên customer ở đây, sau này đăng kí xong sẽ ghi lên
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef2 = database.getReference("customers").child(getUid());
+
+        myRef2.child("name").setValue(getUser().getDisplayName());
+        myRef2.child("email").setValue(getUser().getEmail());
+    }
+
+    public static void updateCustomerLocationToFirebase(Location loc) {
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference myRef = database.getReference("").child(getUid()).child("location");
+//
+//        myRef.child("lat").setValue(loc.getLatitude());
+//        myRef.child("lng").setValue(loc.getLongitude());
+
+        // Khi customer đã booking thì thông tin request chueyenr đi đâu để tài xế cần cập nhật vị trí customer thì lisner chỗ nào
+        //.....
+    }
+
+    public static void registerDriverToFirebase(String driverId, String path, Location location) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
+        GeoFire geoFire = new GeoFire(ref);
+
+        geoFire.setLocation(driverId, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
+            @Override
+            public void onComplete(String key, DatabaseError error) {
+                //Toast.makeText(getApplicationContext(), "Set customer pick up location", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

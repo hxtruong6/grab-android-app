@@ -6,20 +6,20 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.hxtruong.grabbikeapp.authentication.Authentication;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import core.Definition;
 import core.customer.Customer;
 import core.driver.Driver;
+import core.helper.FirebaseHelper;
 import core.helper.MyHelper;
 
 public class MainActivity extends AppCompatActivity implements Customer.IUserListener
 {
     public FirebaseAuth mAuth;
-    public FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +35,28 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
             }
         });
 
-        findViewById(R.id.btnCreateGPS).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btnChangeCustomerLoction).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Customer.getInstance().updateUserLocation(MyHelper.createRandomLocation());
+                Customer.getInstance().updateCustomerLocation(MyHelper.createRandomLocation());
+            }
+        });
+
+        findViewById(R.id.btnReceiveBook).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Driver.getInstance().registerIDriverInterface(new Driver.IDriverListener() {
+                    @Override
+                    public void onDriverLocationChanged(Location loc) {
+
+                    }
+
+                    @Override
+                    public void receiveCustomerRequest(String customerRequestId) {
+
+                    }
+                });
+                Driver.getInstance().updateDriverLocation(MyHelper.createRandomLocation());
             }
         });
     }
@@ -113,22 +131,25 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
     }
     
     @Override
-    public void onMyLocationChanged(Location loc) {
+    public void onCustomerLocationChanged(Location loc) {
         // Cập nhật vị trí customer
         MyHelper.toast(getApplicationContext(), "changed location: "+ Customer.getInstance().mLastKnownLocation.toString());
+        showDebugMsg("Customer Location Changed: " + loc.getLatitude()+", "+loc.getLongitude());
     }
 
-       @Override
-    public void onBookingResult(Driver driver) {
-        // Đã nhận được driver
-        // Bắt đầu cập nhận vị trí driver
-
-    }
-
-    
     @Override
     public void onDriverLocationChanged(Location loc) {
-        // Cập nhật vị trris driver
+        showDebugMsg("Driver Location Changed: "+loc.getLatitude()+", " + loc.getLongitude());
+    }
 
+    @Override
+    public void onBookingResult(String driver) {
+        String driverInfo = FirebaseHelper.getDriverInfo(driver);
+        showDebugMsg("Found a driver: "+ driver+"->"+ driverInfo);
+
+    }
+
+    void showDebugMsg(String msg){
+        ((TextView)findViewById(R.id.tvDebug)).setText(msg);
     }
 }
