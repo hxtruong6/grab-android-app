@@ -1,14 +1,15 @@
-package core.user;
+package core.customer;
 
 import android.location.Location;
 
+import core.Booking;
 import core.driver.Driver;
 import core.helper.FirebaseHelper;
 import core.helper.MyHelper;
 
-public class User {
-    private static final User ourInstance = new User();
-    public static User getInstance() {
+public class Customer {
+    private static final Customer ourInstance = new Customer();
+    public static Customer getInstance() {
         return ourInstance;
     }
 
@@ -20,11 +21,11 @@ public class User {
     Location mStartLoction;
     Location mEndLocation;
 
-    private User() {
-        initUserData();
+    private Customer() {
+        initCustomerData();
     }
 
-    public void initUserData() {
+    public void initCustomerData() {
         mLastKnownLocation = MyHelper.createLocation(1.2f, 2.3f);
         mStartLoction = MyHelper.createLocation(2.0f, 10.2f);
         mEndLocation = MyHelper.createLocation(2.2f, .9f);

@@ -12,9 +12,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import core.Booking;
+import core.customer.Customer;
 import core.driver.Driver;
-import core.user.Booking;
-import core.user.User;
 
 public class FirebaseHelper {
 
@@ -57,13 +57,13 @@ public class FirebaseHelper {
         */
 
         // reference.onChanged(){
-        //     User.getInstance().getUpdateDriverLocation(loc);
+        //     Customer.getInstance().getUpdateDriverLocation(loc);
         // }
 
 
         float lat = 1, lng = 2.0f;
         Location location = MyHelper.createLocation(lat, lng);
-        User.getInstance().updateDriverLocation(location);
+        Customer.getInstance().updateDriverLocation(location);
         return location;
     }
 
