@@ -13,14 +13,14 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key"/>
+            android:value="@string/google_maps_key" />
 
         <activity android:name=".MainActivity">
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity android:name=".authentication.Authentication" />
         <activity android:name=".authentication.ResetPasswordActivity" />
@@ -31,7 +31,13 @@
             android:exported="true" />
 
         <activity android:name=".BookingActivity" />
-        <activity android:name=".CustomerMapActivity"></activity>
+        <activity android:name=".CustomerMapActivity" />
+        <activity android:name=".EditAddressActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

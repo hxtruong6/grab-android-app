@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
-        Customer.getInstance().registerIUserInterface(this);
+        //
 
         findViewById(R.id.btnBook).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
             login();
         }
         else {
+            Customer.getInstance().registerIUserInterface(this);
             updateUI();
         }
     }

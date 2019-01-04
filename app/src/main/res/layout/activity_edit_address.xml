@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".EditAddressActivity">
+    <EditText
+        android:id="@+id/edtOrigin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint= "Origin"/>
+    <EditText
+        android:id="@+id/edtDestination"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Destination"/>
+    <Button
+        android:id="@+id/btnSubmitAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OK"/>
+    <TextView
+        android:id="@+id/tvResultGPS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ahihi"/>
+
+</LinearLayout>
