@@ -1,30 +1,37 @@
-package core.user;
+package core.customer;
 
 import android.location.Location;
+
+import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.FirebaseDatabase;
 
 import core.driver.Driver;
 import core.helper.FirebaseHelper;
 import core.helper.MyHelper;
 
-public class User {
-    private static final User ourInstance = new User();
-    public static User getInstance() {
+public class Customer {
+    private static final Customer ourInstance = new Customer();
+    public static Customer getInstance() {
         return ourInstance;
     }
 
     private IUserListener mListener;
-
+    Boolean isBooking = false;
+    String driverId = "";
     public Location mLastKnownLocation; //tracking gps
     Location mDriverLoction;
 
     Location mStartLoction;
     Location mEndLocation;
 
-    private User() {
-        initUserData();
+    public LatLng pickupLocation;
+    public String driverFoundId;
+
+    private Customer() {
+        initCustomerData();
     }
 
-    public void initUserData() {
+    public void initCustomerData() {
         mLastKnownLocation = MyHelper.createLocation(1.2f, 2.3f);
         mStartLoction = MyHelper.createLocation(2.0f, 10.2f);
         mEndLocation = MyHelper.createLocation(2.2f, .9f);
@@ -32,44 +39,48 @@ public class User {
 
     public void registerIUserInterface(IUserListener listener){
         mListener = listener;
+        FirebaseHelper.registerCustomerToFirebase();
+    }
+
+    // Truong
+    public void sendBookingRequest() {
+        //Booking booking = new Booking(mStartLoction, mEndLocation);
+        // TODO: send the booking later. Just simple for now
+        FirebaseHelper.sendBookingLocation(mLastKnownLocation);
+        driverId = FirebaseHelper.receiveBookingResultFromFirebase();
+
+        if(driverId!=null && !driverId.isEmpty()){
+            // Call getUpdateDriverLocation to update driver location for customer UI
+            isBooking = true;
+            if(mListener!=null)
+                mListener.onBookingResult(driverId);
+            FirebaseHelper.getUpdateDriverLocation(driverId);
+        }
+    }
+
+    public void updateCustomerLocation(Location loc) {
+        mLastKnownLocation = loc;
+        if(isBooking)
+            FirebaseHelper.updateCustomerLocationToFirebase(loc);
+
+        if (mListener != null)
+            mListener.onCustomerLocationChanged(loc);
     }
 
 
-
-    public void sendBookingRequest(){
-            Booking booking = new Booking(mStartLoction, mEndLocation);
-            FirebaseHelper.sendBookingLocation(booking);
-
-            String driverId = FirebaseHelper.receiveBookingResultFromFirebase();
-            if(!driverId.isEmpty()){
-
-                FirebaseHelper.getUpdateDriverLocation(driverId);
-
-            }
-
-
-    }
-
-    public void updateUserLocation(Location loc){
-          mLastKnownLocation = loc;
-          FirebaseHelper.updateUserLocationToFirebase(loc);
-
-          if(mListener!=null)
-            mListener.onMyLocationChanged(loc);
-    }
-
-    public void updateDriverLocation(Location location){
-
-        if(mListener!=null)
-            mListener.onDriverLocationChanged(location);
+    // Truong
+    public void receiveDriverLocationFromFirebase(Location driverLocation) {
+        // this function is auto called from FirebaseHelper after find a driver
+        if (mListener != null)
+            mListener.onDriverLocationChanged(driverLocation);
     }
 
 
     //Interface
     public interface IUserListener {
-        void onMyLocationChanged(Location location);
+        void onCustomerLocationChanged(Location location);
         void onDriverLocationChanged(Location location);
-        void onBookingResult(Driver driver);
+        void onBookingResult(String driver);
     }
 
 }

@@ -10,7 +10,7 @@ public class Driver {
     public static Driver getInstance() {
         return ourInstance;
     }
-
+    Boolean isWorking = false;
     private IDriverListener mListener;
 
     public Location mLastKnownLocation; //tracking gps
@@ -25,7 +25,7 @@ public class Driver {
 
     public void registerIDriverInterface(IDriverListener listener){
         mListener = listener;
-        FirebaseHelper.registerDriverToFirebase(mLastKnownLocation);
+        FirebaseHelper.registerDriverToFirebase(FirebaseHelper.getUser().getUid(), "driversAvailable", mLastKnownLocation);
         FirebaseHelper.startListenCustomerRequest();
 
     }
@@ -33,18 +33,18 @@ public class Driver {
     public void updateDriverLocation(Location loc){
         mLastKnownLocation = loc;
 
-        FirebaseHelper.updateDriverLocationToFirebase(loc);
+        if(isWorking)
+            FirebaseHelper.updateDriverLocationToFirebase(loc, "driversWorking");
+        else
+            FirebaseHelper.updateDriverLocationToFirebase(loc, "driversAvailable");
+
         if(mListener!=null)
             mListener.onDriverLocationChanged(loc);
     }
 
-    public void receiveBookingResultFromFirebase(Driver driver){
-
-        if(mListener!=null)
-            mListener.onBookingResult(driver);
-    }
 
     public void receiveAndStartTripWithCustomerRequest(String customerRequestId) {
+        isWorking = true;
         updateDriverLocation(mLastKnownLocation);
 
         if(mListener!=null)
@@ -54,11 +54,7 @@ public class Driver {
 
     //Interface
     public interface IDriverListener {
-        void onUserLocationChanged(Location loc);
-
         void onDriverLocationChanged(Location loc);
-        void onBookingResult(Driver driver);
-
         void receiveCustomerRequest(String customerRequestId);
     }
 

@@ -8,62 +8,95 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.hxtruong.grabbikeapp.authentication.Authentication;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import core.Definition;
+import core.customer.Customer;
 import core.driver.Driver;
+import core.helper.FirebaseHelper;
 import core.helper.MyHelper;
-import core.user.User;
 
-public class MainActivity extends AppCompatActivity implements User.IUserListener
+public class MainActivity extends AppCompatActivity implements Customer.IUserListener
 {
     public FirebaseAuth mAuth;
     public FirebaseUser firebaseUser;
 
-    EditText etAuto;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
-        User.getInstance().registerIUserInterface(this);
+
 
         findViewById(R.id.btnBook).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              User.getInstance().sendBookingRequest();
+                Customer.getInstance().sendBookingRequest();
             }
         });
 
-        findViewById(R.id.btnCreateGPS).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btnChangeCustomerLoction).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                User.getInstance().updateUserLocation(MyHelper.createRandomLocation());
+                Customer.getInstance().updateCustomerLocation(MyHelper.createRandomLocation());
             }
         });
 
-        etAuto = findViewById(R.id.etPlaceAuto);
-        etAuto.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btnReceiveBook).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    Intent intent =
-                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-                                    .build(getParent());
-                    startActivityForResult(intent, Definition.PLACE_AUTOCOMPLETE_REQUEST_CODE);
-                } catch (GooglePlayServicesRepairableException e) {
-                    // TODO: Handle the error.
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    // TODO: Handle the error.
-                }
+                Driver.getInstance().registerIDriverInterface(new Driver.IDriverListener() {
+                    @Override
+                    public void onDriverLocationChanged(Location loc) {
+
+                    }
+
+                    @Override
+                    public void receiveCustomerRequest(String customerRequestId) {
+
+                    }
+                });
+                Driver.getInstance().updateDriverLocation(MyHelper.createRandomLocation());
+            }
+        });
+
+        //
+        final PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        AutocompleteFilter filter = new AutocompleteFilter.Builder()
+                .setCountry("VN")
+                .build();
+
+        autocompleteFragment.setFilter(filter);
+
+        autocompleteFragment.setBoundsBias(new LatLngBounds(
+                new LatLng(10.428096, 106.436985),
+                new LatLng(11.144442, 106.961429)
+                ));
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                autocompleteFragment.setText(place.getName());
+
+            }
+            @Override
+            public void onError(Status status) {
+                autocompleteFragment.setText(status.toString());
             }
         });
     }
@@ -75,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements User.IUserListene
             login();
         }
         else {
+            Customer.getInstance().registerIUserInterface(this);
             updateUI();
         }
     }
@@ -101,20 +135,6 @@ public class MainActivity extends AppCompatActivity implements User.IUserListene
                 }
                 break;
 
-            case Definition.PLACE_AUTOCOMPLETE_REQUEST_CODE:
-                if (resultCode == RESULT_OK) {
-                    Place place = PlaceAutocomplete.getPlace(this, data);
-                    Log.i("AutoPlace", "Place: " + place.getName());
-                    etAuto.setText(place.getName());
-                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                    Status status = PlaceAutocomplete.getStatus(this, data);
-                    // TODO: Handle the error.
-                    Log.i("AutoPlace    ", status.getStatusMessage());
-
-                } else if (resultCode == RESULT_CANCELED) {
-                    // The user canceled the operation.
-                }
-                break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -153,22 +173,25 @@ public class MainActivity extends AppCompatActivity implements User.IUserListene
     }
     
     @Override
-    public void onMyLocationChanged(Location loc) {
+    public void onCustomerLocationChanged(Location loc) {
         // Cập nhật vị trí customer
-        MyHelper.toast(getApplicationContext(), "changed location: "+ User.getInstance().mLastKnownLocation.toString());
+        MyHelper.toast(getApplicationContext(), "changed location: "+ Customer.getInstance().mLastKnownLocation.toString());
+        showDebugMsg("Customer Location Changed: " + loc.getLatitude()+", "+loc.getLongitude());
     }
 
-       @Override
-    public void onBookingResult(Driver driver) {
-        // Đã nhận được driver
-        // Bắt đầu cập nhận vị trí driver
-
-    }
-
-    
     @Override
     public void onDriverLocationChanged(Location loc) {
-        // Cập nhật vị trris driver
+        showDebugMsg("Driver Location Changed: "+loc.getLatitude()+", " + loc.getLongitude());
+    }
 
+    @Override
+    public void onBookingResult(String driver) {
+        String driverInfo = FirebaseHelper.getDriverInfo(driver);
+        showDebugMsg("Found a driver: "+ driver+"->"+ driverInfo);
+
+    }
+
+    void showDebugMsg(String msg){
+        ((TextView)findViewById(R.id.tvDebug)).setText(msg);
     }
 }

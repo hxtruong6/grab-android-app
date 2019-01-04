@@ -25,7 +25,7 @@ public class MyHelper {
         }
         return true;
     }
-    public static Location createLocation(float lat, float lng) {
+    public static Location createLocation(double lat, double lng) {
         Location loc = new Location("dummyprovider");
         loc.setLatitude(lat);
         loc.setLongitude(lng);

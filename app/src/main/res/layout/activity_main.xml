@@ -1,58 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello Bullshit World!"
-        android:id="@+id/btnBook"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
 
         android:id="@+id/driver"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="128dp"
         android:onClick="goToDriver"
         android:text="I'm a Driver"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        />
 
     <Button
         android:id="@+id/customer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:text="I'm a Customer"
         android:onClick="gotToCustomer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/driver" />
+        />
 
     <Button
-        android:id="@+id/btnCreateGPS"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Create GPS"
-        app:layout_constraintBottom_toBottomOf="@id/btnBook"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.25" />
-    <EditText
-        android:id="@+id/etPlaceAuto"
+        android:id="@+id/btnBook"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="clickMe"
+        android:text="Book"
         />
-</android.support.constraint.ConstraintLayout>
+
+    <Button
+        android:id="@+id/btnChangeCustomerLoction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Change Customer Location"
+        />
+
+    <Button
+        android:id="@+id/btnReceiveBook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Receive Book"
+        />
+
+    <TextView
+        android:id="@+id/tvDebug"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+
+        android:layout_marginBottom="8dp"
+        android:text="Debug Message"
+        />
+    <android.support.v7.widget.CardView
+        android:id="@+id/idCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_marginTop="5dp"
+        app:cardCornerRadius="4dp">
+        <fragment
+            android:id="@+id/place_autocomplete_fragment"
+            android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </android.support.v7.widget.CardView>
+</LinearLayout>
