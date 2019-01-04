@@ -185,7 +185,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
           //  this.textFeedback.setText(feedback);
         } else {
-
+            //error
         }
     }
 
