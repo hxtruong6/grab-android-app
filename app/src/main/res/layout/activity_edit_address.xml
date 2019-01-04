@@ -6,25 +6,28 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".EditAddressActivity">
-    <EditText
-        android:id="@+id/edtOrigin"
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/idCardViewDestination"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint= "Origin"/>
-    <EditText
-        android:id="@+id/edtDestination"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Destination"/>
+        android:layout_margin="5dp"
+        android:layout_marginTop="5dp"
+        app:cardCornerRadius="4dp">
+        <fragment
+            android:id="@+id/place_autocomplete_fragment_destination"
+            android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </android.support.v7.widget.CardView>
+
     <Button
         android:id="@+id/btnSubmitAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="OK"/>
-    <TextView
-        android:id="@+id/tvResultGPS"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ahihi"/>
+
 
 </LinearLayout>

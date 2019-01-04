@@ -38,7 +38,7 @@ import core.Definition;
 import core.helper.MyHelper;
 
 public class Authentication extends AppCompatActivity{
-    private static final String TAG = "GoogleActivity";
+    private static final String TAG = "Authentication";
     TabAdapter tabAdapter;
     TabLayout tabLayout;
     ViewPager viewPager;
@@ -198,6 +198,7 @@ public class Authentication extends AppCompatActivity{
                         if (!task.isSuccessful()) {
                             // there was an error
                             Toast.makeText(getApplicationContext(), getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+                            Log.d(TAG, "onComplete: ");
                         } else {
                             MyHelper.toast(getApplicationContext(), "Register done! Authentication again!");
                             fmSignUp.clearSignFields();

@@ -1,6 +1,7 @@
 package com.example.hxtruong.grabbikeapp;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -44,11 +45,16 @@ import core.customer.Customer;
 import core.helper.FirebaseHelper;
 
 public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationSource.OnLocationChangedListener, Customer.IUserListener {
+    private static final int CODE_ORIGIN = 4000;
+    private static final int CODE_DESTINATION = 4001;
     private GoogleMap mMap;
     private Location mLastLocation;
     private LatLng pickupLocation;
     private TextView originAddress;
     private Double currentLatitude, currentLongitude;
+
+    TextView tvOrigin, tvDestination;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +66,20 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 .findFragmentById(R.id.customerMap);
         mapFragment.getMapAsync(this);
         Customer.getInstance().registerIUserInterface(this);
+        tvOrigin = findViewById(R.id.tvOrigin);
+        tvDestination = findViewById(R.id.tvDestination);
+        tvOrigin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editOriginAndDestination(CODE_ORIGIN);
+            }
+        });
+        tvDestination.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editOriginAndDestination(CODE_DESTINATION);
+            }
+        });
 
         setOriginAddressToTextView();
 
@@ -76,7 +96,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 .position(hcmus)
                 .title("Marker in HCMUS")
         );
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hcmus, 18));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hcmus, 15));
 
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -120,7 +140,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
         mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here"));
 
-        ((Button) view.findViewById(R.id.request)).setText("Getting your Driver....");
+        //((Button) view.findViewById(R.id.request)).setText("Getting your Driver....");
     }
 
     @Override
@@ -137,16 +157,36 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     @Override
     public void onBookingResult(String driver) {
 
-        String string = FirebaseHelper.getDriverInfo(driver);
+        //String string = FirebaseHelper.getDriverInfo(driver);
     }
 
-    public void editOriginAndDestination(View view) {
+    public void editOriginAndDestination(int requestCode) {
         Intent intent = new Intent(CustomerMapActivity.this, EditAddressActivity.class);
-        intent.putExtra("currentLatitude", currentLatitude);
-        intent.putExtra("currentLongitude",currentLongitude);
-        intent.putExtra("origin", originAddress.getText());
-        startActivity(intent);
+        this.startActivityForResult(intent, requestCode);
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+
+            String address = data.getStringExtra("address");
+            String lat = data.getStringExtra("lat");
+            String lng = data.getStringExtra("lng");
+            if(requestCode == CODE_ORIGIN){
+                tvOrigin.setText(address);
+                Customer.getInstance().setStartLocation(Float.valueOf(lat), Float.valueOf(lng));
+                //
+            }else if(requestCode == CODE_DESTINATION){
+                tvDestination.setText(address);
+                Customer.getInstance().setEndLocation(Float.valueOf(lat), Float.valueOf(lng));
+                //
+            }
+
+
+          //  this.textFeedback.setText(feedback);
+        } else {
+
+        }
     }
 
     private void setOriginAddressToTextView() {
@@ -155,7 +195,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                originAddress = (TextView)findViewById(R.id.tvShowOrigin);
+                originAddress = (TextView)findViewById(R.id.tvOrigin);
                 currentLatitude = location.getLatitude();
                 currentLongitude = location.getLongitude();
                 try{

@@ -39,6 +39,14 @@
           }
         },
         {
+          "client_id": "34625605963-78ts4ocr4evk2hbh717no6hm0309ksqb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hxtruong.grabbikeapp",
+            "certificate_hash": "694d6457a8fce7f8a175648553a03b15ca1d328f"
+          }
+        },
+        {
           "client_id": "34625605963-074kb2u4jlfg8429v3r8n6uvl3apd1vf.apps.googleusercontent.com",
           "client_type": 3
         }

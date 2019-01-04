@@ -13,6 +13,7 @@ public final class Definition {
     public static final int REQUEST_LOGIN_WITH_GOOGLE = 3005;
     public static final int REQUEST_LOGIN = 3006;
     public static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 3007;
+    public static final int RESULT_CODE_RETURN_ADDRESS = 3008;
 
     public static String[] PERMISSIONS = {
             Manifest.permission.ACCESS_FINE_LOCATION

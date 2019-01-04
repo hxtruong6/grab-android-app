@@ -8,17 +8,19 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
+import javax.net.ssl.HttpsURLConnection;
+
 public class HttpDataHandler {
 
-    public HttpDataHandler(){
+    public HttpDataHandler() {
 
     }
 
     public String getHTTPData(String requestURL)
     {
         URL url;
-        String response ="";
-        try {
+        String response = "";
+        try{
             url = new URL(requestURL);
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             conn.setRequestMethod("GET");
@@ -29,18 +31,15 @@ public class HttpDataHandler {
             conn.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
 
             int responseCode = conn.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK)
+            if(responseCode == HttpsURLConnection.HTTP_OK)
             {
                 String line;
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                while (br.readLine()!= null)
-                {
-                    line = br.readLine();
+                while((line = br.readLine()) != null)
                     response+=line;
-                }
             }
             else
-                response="";
+                response = "";
 
         } catch (ProtocolException e) {
             e.printStackTrace();
@@ -49,7 +48,6 @@ public class HttpDataHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return  response;
+        return response;
     }
-
 }

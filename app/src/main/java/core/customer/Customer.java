@@ -75,6 +75,17 @@ public class Customer {
             mListener.onDriverLocationChanged(driverLocation);
     }
 
+    public void setStartLocation(float lat, float lng) {
+        mStartLoction.setLatitude(lat);
+        mStartLoction.setLongitude(lng);
+    }
+
+
+    public void setEndLocation(float lat, float lng) {
+        mEndLocation.setLatitude(lat);
+        mEndLocation.setLongitude(lng);
+    }
+
 
     //Interface
     public interface IUserListener {

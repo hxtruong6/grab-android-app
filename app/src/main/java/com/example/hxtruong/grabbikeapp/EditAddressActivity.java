@@ -1,69 +1,126 @@
 package com.example.hxtruong.grabbikeapp;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import core.Definition;
+
 public class EditAddressActivity extends AppCompatActivity {
     private  String current0rigin;
-    private String edtDestination;
+    private String address;
     private String currentLatitude, currentLongitude;
     private String lat ="";
     private String lng ="";
     private static String GOOGLE_KEY = "AIzaSyDzGTfU97JHRG9n2U29EAojIhFll2RE09I";
+
+    int requestCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_address);
 
-        EditText edtOrigin = (EditText)findViewById(R.id.edtOrigin);
-        final EditText edtDestination = (EditText)findViewById(R.id.edtDestination);
+       // EditText edtOrigin = (EditText)findViewById(R.id.edtOrigin);
+        //final EditText edtDestination = (EditText)findViewById(R.id.edtDestination);
         Button btnSubmit = (Button)findViewById(R.id.btnSubmitAddress);
 
         Intent intent = this.getIntent();
 
-        this.currentLatitude= intent.getStringExtra("currentLatitude");
-        this.currentLongitude = intent.getStringExtra("currentLongitude");
-        this.current0rigin = intent.getStringExtra("origin");
-
+        registPlaceAutoComplete();
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new GetCoordinates().execute(edtDestination.getText().toString().replace(" ","+"));
-                sendIntent();
+                new GetCoordinates().execute(address.replace(" ","+"));
             }
         });
-    }
-
-    private void convertAddressToGPS() {
-    }
-
-    private void sendIntent() {
 
 
     }
 
-    private class GetCoordinates extends AsyncTask<String, Void, String> {
+    @Override
+    public void finish() {
 
-        ProgressDialog dialogInfo = new ProgressDialog(EditAddressActivity.this);
+        // Chuẩn bị dữ liệu Intent.
+        Intent data = new Intent();
+        data.putExtra("address", address);
+        data.putExtra("lat",lat);
+        data.putExtra("lng",lng);
+
+        // Activity đã hoàn thành OK, trả về dữ liệu.
+        this.setResult(Activity.RESULT_OK, data);
+        super.finish();
+    }
+
+
+
+    private void registPlaceAutoComplete() {
+
+        final PlaceAutocompleteFragment placeDestination = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment_destination);
+
+        AutocompleteFilter filter = new AutocompleteFilter.Builder()
+                .setCountry("VN")
+                .build();
+
+        placeDestination.setFilter(filter);
+
+        LatLngBounds latLngBounds = new LatLngBounds(
+                new LatLng(10.428096, 106.436985),
+                new LatLng(11.144442, 106.961429));
+
+        placeDestination.setBoundsBias(latLngBounds);
+
+        placeDestination.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                placeDestination.setText(place.getName());
+                //set string destination
+                address = place.getAddress().toString();
+                if(!address.isEmpty()){
+                    new GetCoordinates().execute(address.replace(" ","+"));
+                }
+
+
+            }
+            @Override
+            public void onError(Status status) {
+                placeDestination.setText(status.toString());
+            }
+        });
+
+
+    }
+
+
+    private class GetCoordinates extends AsyncTask<String,Void,String> {
         ProgressDialog dialog = new ProgressDialog(EditAddressActivity.this);
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            dialog.setMessage("Vui lòng đợi...");
+            dialog.setMessage("Please wait....");
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
         }
@@ -94,21 +151,19 @@ public class EditAddressActivity extends AppCompatActivity {
                         .getJSONObject("location").get("lat").toString();
                 lng = ((JSONArray)jsonObject.get("results")).getJSONObject(0).getJSONObject("geometry")
                         .getJSONObject("location").get("lng").toString();
+                //
 
-                TextView textView = (TextView)findViewById(R.id.tvResultGPS);
-                textView.setText(String.format("Coordinates: %s / %s ",lat, lng));
+
+
+
                 if(dialog.isShowing())
                     dialog.dismiss();
+                finish();
 
             } catch (JSONException e) {
                 e.printStackTrace();
-                //dialogInfo.setMessage("API đang dùng đã vượt quá số lượng truy cập!!");
-                //dialogInfo.show();
-                //if(dialog.isShowing())
-                //  dialog.dismiss();
-
             }
         }
-
     }
+
 }

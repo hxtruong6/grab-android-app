@@ -3,7 +3,7 @@
     package="com.example.hxtruong.grabbikeapp">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -17,11 +17,11 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".MainActivity">
-            <!--<intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
         </activity>
         <activity android:name=".authentication.Authentication" />
         <activity android:name=".authentication.ResetPasswordActivity" />
@@ -32,13 +32,23 @@
             android:exported="true" />
 
         <activity android:name=".BookingActivity" />
-        <activity android:name=".CustomerMapActivity" />
-        <activity android:name=".EditAddressActivity">
+        <activity android:name=".CustomerMapActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".EditAddressActivity">
+           <!-- <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
+        <activity
+            android:name=".WaitingDriverActivity"
+            android:label="@string/title_activity_waiting_driver"></activity>
     </application>
 
 </manifest>
