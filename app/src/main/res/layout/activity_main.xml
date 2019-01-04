@@ -49,5 +49,10 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.25" />
-
+    <EditText
+        android:id="@+id/etPlaceAuto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="clickMe"
+        />
 </android.support.constraint.ConstraintLayout>

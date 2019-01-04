@@ -1,5 +1,4 @@
 package com.example.hxtruong.grabbikeapp;
-
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;

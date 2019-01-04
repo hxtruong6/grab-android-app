@@ -5,9 +5,16 @@ import android.location.Location;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
 import com.example.hxtruong.grabbikeapp.authentication.Authentication;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -21,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements User.IUserListene
     public FirebaseAuth mAuth;
     public FirebaseUser firebaseUser;
 
+    EditText etAuto;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +47,23 @@ public class MainActivity extends AppCompatActivity implements User.IUserListene
             @Override
             public void onClick(View v) {
                 User.getInstance().updateUserLocation(MyHelper.createRandomLocation());
+            }
+        });
+
+        etAuto = findViewById(R.id.etPlaceAuto);
+        etAuto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent intent =
+                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                                    .build(getParent());
+                    startActivityForResult(intent, Definition.PLACE_AUTOCOMPLETE_REQUEST_CODE);
+                } catch (GooglePlayServicesRepairableException e) {
+                    // TODO: Handle the error.
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    // TODO: Handle the error.
+                }
             }
         });
     }
@@ -73,6 +98,21 @@ public class MainActivity extends AppCompatActivity implements User.IUserListene
                 }
                 else{
                     MyHelper.toast(this, "Login Failed");
+                }
+                break;
+
+            case Definition.PLACE_AUTOCOMPLETE_REQUEST_CODE:
+                if (resultCode == RESULT_OK) {
+                    Place place = PlaceAutocomplete.getPlace(this, data);
+                    Log.i("AutoPlace", "Place: " + place.getName());
+                    etAuto.setText(place.getName());
+                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                    Status status = PlaceAutocomplete.getStatus(this, data);
+                    // TODO: Handle the error.
+                    Log.i("AutoPlace    ", status.getStatusMessage());
+
+                } else if (resultCode == RESULT_CANCELED) {
+                    // The user canceled the operation.
                 }
                 break;
         }
