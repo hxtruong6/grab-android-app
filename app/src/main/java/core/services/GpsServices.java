@@ -9,7 +9,8 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-import core.helper.MyHelper;
+import core.customer.Customer;
+import core.driver.Driver;
 
 public class GpsServices extends Service {
     private static final String TAG = "GPS Service";
@@ -33,10 +34,8 @@ public class GpsServices extends Service {
             Log.e(TAG, "onLocationChanged: " + location);
             mLastLocation.set(location);
 
-            //User.getInstance().setCurrentLocation(mLastLocation);
-
-            Log.i(TAG, "LocationChanged: "+location);
-            MyHelper.toast(getApplicationContext(),"Tracked location: "+location);
+            Customer.getInstance().updateCustomerLocation(mLastLocation);
+            Driver.getInstance().updateDriverLocation(mLastLocation);
         }
 
         @Override

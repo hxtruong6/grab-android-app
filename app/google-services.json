@@ -23,6 +23,30 @@
           }
         },
         {
+          "client_id": "34625605963-lka1f96covmm64cgijtolnpvolbk3vsk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hxtruong.grabbikeapp",
+            "certificate_hash": "de42ee727999c1bd9b2855d7a42a76fccf3d4e91"
+          }
+        },
+        {
+          "client_id": "34625605963-kf95olr9ckruaj6u7droujrmggat6fo1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hxtruong.grabbikeapp",
+            "certificate_hash": "bfbf1ff2ecd2d138ff14e5cb669733bbab8ffc5c"
+          }
+        },
+        {
+          "client_id": "34625605963-78ts4ocr4evk2hbh717no6hm0309ksqb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hxtruong.grabbikeapp",
+            "certificate_hash": "694d6457a8fce7f8a175648553a03b15ca1d328f"
+          }
+        },
+        {
           "client_id": "34625605963-074kb2u4jlfg8429v3r8n6uvl3apd1vf.apps.googleusercontent.com",
           "client_type": 3
         }
