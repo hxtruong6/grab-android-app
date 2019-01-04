@@ -17,5 +17,6 @@
     <string name="term_policy"><u><b>Terms and Privacy Policy</b></u></string>
     <string name="title_activity_customer_maps">Map</string>
     <string name="title_activity_waiting_driver">Map</string>
+    <string name="title_activity_show_route">Map</string>
 
 </resources>
