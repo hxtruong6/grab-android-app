@@ -1,18 +1,22 @@
 package com.example.hxtruong.grabbikeapp.route;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.example.hxtruong.grabbikeapp.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -30,6 +34,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
     private List<Polyline> polylinePaths;
     private ProgressDialog progressDialog;
     private String parentActivity;
+    private TextView txtPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        txtPrice = findViewById(R.id.txtPrice);
         Intent intent = getIntent();
         if (intent != null)
             parentActivity = intent.getStringExtra("ID");
@@ -59,6 +65,8 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        LatLng hcmus = new LatLng(10.763261, 106.682215);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hcmus, 15));
 
         if (parentActivity.compareTo("CUSTOMERMAP") == 0)
         {
@@ -91,8 +99,17 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         progressDialog.dismiss();
         polylinePaths = new ArrayList<>();
         for (Route route : routes){
-            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(route.bounds,100));
-
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(route.bounds,200));
+            Marker markerOrigin = mMap.addMarker(new MarkerOptions()
+                    .position(route.startLocation)
+                    .title(route.startAddress.split(",")[0])
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.icons_location_marker_red)));
+            Marker markerDestination = mMap.addMarker(new MarkerOptions()
+                    .position(route.endLocation)
+                    .title(route.endAddress.split(",")[0])
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.icons_location_marker_blue)));
+            markerDestination.showInfoWindow();
+            markerOrigin.showInfoWindow();
             PolylineOptions polylineOptions = new PolylineOptions().
                     geodesic(true).
                     color(Color.BLUE).
@@ -101,6 +118,12 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
                 polylineOptions.add(route.points.get(i));
 
             polylinePaths.add(mMap.addPolyline(polylineOptions));
+
+            int price = 10000;
+            if (route.distance.value > 2000){
+                price += Math.round((route.distance.value - 2000)*3/100)*100;
+            }
+            txtPrice.setText(String.valueOf(price) + "VND");
         }
     }
 }
