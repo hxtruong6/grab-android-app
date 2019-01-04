@@ -5,28 +5,40 @@ import android.location.Location;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import com.example.hxtruong.grabbikeapp.authentication.Authentication;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import core.Definition;
-import core.customer.Customer;
 import core.driver.Driver;
 import core.helper.FirebaseHelper;
 import core.helper.MyHelper;
+import core.user.User;
 
-public class MainActivity extends AppCompatActivity implements Customer.IUserListener
+public class MainActivity extends AppCompatActivity implements User.IUserListener
 {
     public FirebaseAuth mAuth;
+    public FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
-        //
+        User.getInstance().registerIUserInterface(this);
 
         findViewById(R.id.btnBook).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +69,32 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
                     }
                 });
                 Driver.getInstance().updateDriverLocation(MyHelper.createRandomLocation());
+            }
+        });
+
+        //
+        final PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        AutocompleteFilter filter = new AutocompleteFilter.Builder()
+                .setCountry("VN")
+                .build();
+
+        autocompleteFragment.setFilter(filter);
+
+        autocompleteFragment.setBoundsBias(new LatLngBounds(
+                new LatLng(10.428096, 106.436985),
+                new LatLng(11.144442, 106.961429)
+                ));
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                autocompleteFragment.setText(place.getName());
+
+            }
+            @Override
+            public void onError(Status status) {
+                autocompleteFragment.setText(status.toString());
             }
         });
     }
@@ -94,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
                     MyHelper.toast(this, "Login Failed");
                 }
                 break;
+
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
