@@ -151,10 +151,6 @@ public class EditAddressActivity extends AppCompatActivity {
                         .getJSONObject("location").get("lat").toString();
                 lng = ((JSONArray)jsonObject.get("results")).getJSONObject(0).getJSONObject("geometry")
                         .getJSONObject("location").get("lng").toString();
-                //
-
-
-
 
                 if(dialog.isShowing())
                     dialog.dismiss();

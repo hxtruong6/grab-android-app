@@ -1,7 +1,9 @@
 package com.example.hxtruong.grabbikeapp.route;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
+import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -18,6 +20,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 import java.util.List;
 
+import core.customer.Customer;
+
 public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCallback, DirectionFinderListener {
 
     private GoogleMap mMap;
@@ -25,6 +29,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
     private LatLng latLngEnd;
     private List<Polyline> polylinePaths;
     private ProgressDialog progressDialog;
+    private String parentActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +39,13 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        Intent intent = getIntent();
+        if (intent != null)
+            parentActivity = intent.getStringExtra("ID");
+        else parentActivity = null;
         polylinePaths = new ArrayList<>();
-    }
 
+    }
 
     /**
      * Manipulates the map once available.
@@ -51,23 +60,18 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
+        if (parentActivity.compareTo("CUSTOMERMAP") == 0)
+        {
+            Location temp = Customer.getInstance().mStartLoction;
+            latLngStart = new LatLng(temp.getLatitude(), temp.getLongitude());
+            temp = Customer.getInstance().mEndLocation;
+            latLngEnd = new LatLng(temp.getLatitude(), temp.getLongitude());
+            ShowRoute();
+        }
     }
 
     private void ShowRoute() {
-
-        GetDataFromIntent();
         new DirectionFinder(this, latLngStart, latLngEnd).execute();
-
-    }
-
-    private void GetDataFromIntent() {
-        latLngStart = new LatLng(10.7627345,106.6822347);
-        latLngEnd = new LatLng(10.7803201,106.6984916);
     }
 
     @Override
@@ -88,7 +92,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         polylinePaths = new ArrayList<>();
         for (Route route : routes){
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(route.bounds,100));
-//            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));
+
             PolylineOptions polylineOptions = new PolylineOptions().
                     geodesic(true).
                     color(Color.BLUE).
