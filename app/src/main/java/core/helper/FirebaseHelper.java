@@ -156,7 +156,7 @@ public class FirebaseHelper {
                         locationLng = Double.parseDouble(map.get(1).toString());
                     }
 
-                    Location driverLocation = MyHelper.createLocation(locationLat, locationLng);
+                    LatLng driverLocation = new LatLng(locationLat, locationLng);
                     // send location to user by call a function in user when every location change
                     Customer.getInstance().receiveDriverLocationFromFirebase(driverLocation);
                 }

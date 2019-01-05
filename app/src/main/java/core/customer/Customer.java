@@ -22,7 +22,7 @@ public class Customer {
     Boolean isBooking = false;
     public String driverId = "";
     public Location mLastKnownLocation; //tracking gps
-    public Location mDriverLoction;
+    public LatLng mDriverLoction;
 
     public Location mStartLoction;
     public Location mEndLocation;
@@ -75,8 +75,9 @@ public class Customer {
 
 
     // Truong
-    public void receiveDriverLocationFromFirebase(Location driverLocation) {
+    public void receiveDriverLocationFromFirebase(LatLng driverLocation) {
         // this function is auto called from FirebaseHelper after find a driver
+        mDriverLoction = driverLocation;
         if (mListener != null)
             mListener.onDriverLocationChanged(driverLocation);
     }
@@ -106,7 +107,7 @@ public class Customer {
     //Interface
     public interface IUserListener {
         void onCustomerLocationChanged(Location location);
-        void onDriverLocationChanged(Location location);
+        void onDriverLocationChanged(LatLng location);
         void onBookingResult(String driver);
     }
 

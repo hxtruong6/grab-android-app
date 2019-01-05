@@ -147,7 +147,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     }
 
     @Override
-    public void onDriverLocationChanged(Location location) {
+    public void onDriverLocationChanged(LatLng location) {
 
     }
 
