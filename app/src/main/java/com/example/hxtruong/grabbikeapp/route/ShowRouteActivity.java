@@ -7,9 +7,12 @@ import android.graphics.Color;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.hxtruong.grabbikeapp.R;
+import com.example.hxtruong.grabbikeapp.WaitingForFindingDriver.WaitForFindingDriver;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -35,6 +38,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
     private ProgressDialog progressDialog;
     private String parentActivity;
     private TextView txtPrice;
+    private Button btnBook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +49,24 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         txtPrice = findViewById(R.id.txtPrice);
+        btnBook = findViewById(R.id.btnBook);
+        btnBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Book();
+            }
+        });
         Intent intent = getIntent();
         if (intent != null)
             parentActivity = intent.getStringExtra("ID");
         else parentActivity = null;
         polylinePaths = new ArrayList<>();
 
+    }
+
+    private void Book() {
+        Intent intent = new Intent(ShowRouteActivity.this, WaitForFindingDriver.class);
+        startActivity(intent);
     }
 
     /**

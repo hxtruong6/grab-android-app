@@ -54,7 +54,8 @@
             android:label="@string/title_activity_waiting_driver" />
         <activity
             android:name=".route.ShowRouteActivity"
-            android:label="@string/title_activity_show_route"></activity>
+            android:label="@string/title_activity_show_route" />
+        <activity android:name=".WaitingForFindingDriver.WaitForFindingDriver"></activity>
     </application>
 
 </manifest>
