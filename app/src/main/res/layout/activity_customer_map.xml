@@ -1,20 +1,26 @@
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.hxtruong.grabbikeapp.CustomerMapActivity" >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.hxtruong.grabbikeapp.CustomerMapActivity">
+
+
     <fragment
         class="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/customerMap"/>
+    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
 
         >
+
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
