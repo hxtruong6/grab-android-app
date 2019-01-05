@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-feature android:name="android.hardware.location.gps" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -54,8 +56,12 @@
             android:label="@string/title_activity_show_route" />
         <activity android:name=".WaitingForFindingDriver.WaitForFindingDriver" />
         <activity
+            android:name=".DriverMapActivity"
+            android:label="@string/title_activity_driver_map" />
+        <activity
             android:name=".UpdateMapRealtimeActivity"
             android:label="@string/title_activity_update_map_realtime"></activity>
+
     </application>
 
 </manifest>

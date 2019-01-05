@@ -1,60 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".MainActivity">
 
-
-    <Button
-
-        android:id="@+id/driver"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="goToDriver"
-        android:text="I'm a Driver"
-        />
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/customer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="I'm a Customer"
-        android:onClick="gotToCustomer"
-        />
+        <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/drawer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            tools:openDrawer="start">
 
-    <Button
-        android:id="@+id/btnBook"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Book"
-        />
+            <include
+                layout="@layout/app_bar_main"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-    <Button
-        android:id="@+id/btnChangeCustomerLoction"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Change Customer Location"
-        />
+            <android.support.design.widget.NavigationView
+                android:id="@+id/nav_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:fitsSystemWindows="true"
+                app:headerLayout="@layout/nav_header_main"
+                app:menu="@menu/activity_main_drawer" />
 
-    <Button
-        android:id="@+id/btnReceiveBook"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Receive Book"
-        />
+        </android.support.v4.widget.DrawerLayout>
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvDebug"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-
-        android:layout_marginBottom="8dp"
-        android:text="Debug Message"
-        />
 
 </LinearLayout>
