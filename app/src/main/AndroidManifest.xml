@@ -52,15 +52,16 @@
             -->
         </activity>
         <activity
-            android:name=".WaitingDriverActivity"
-            android:label="@string/title_activity_waiting_driver" />
-        <activity
             android:name=".route.ShowRouteActivity"
             android:label="@string/title_activity_show_route" />
         <activity android:name=".WaitingForFindingDriver.WaitForFindingDriver" />
         <activity
             android:name=".DriverMapActivity"
             android:label="@string/title_activity_driver_map" />
+        <activity
+            android:name=".UpdateMapRealtimeActivity"
+            android:label="@string/title_activity_update_map_realtime"></activity>
+
     </application>
 
 </manifest>

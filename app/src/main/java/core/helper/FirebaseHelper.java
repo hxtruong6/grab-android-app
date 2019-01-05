@@ -22,6 +22,7 @@ import java.util.List;
 
 import core.customer.Customer;
 import core.driver.Driver;
+import core.driver.DriverInfo;
 
 public class FirebaseHelper {
 
@@ -91,7 +92,7 @@ public class FirebaseHelper {
                 if (!driverFound) {
                     driverFound = true;
                     driverFoundId = key;
-                    Customer.getInstance().driverFoundId = key;
+                    Customer.getInstance().driverId = key;
                     //DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundId);
                     // this function use put customerRequestId to availbleDriver field
                     DatabaseReference availableDriverRef = FirebaseDatabase.getInstance().getReference().child("driversAvailable").child(driverFoundId);
@@ -250,27 +251,26 @@ public class FirebaseHelper {
 
     }
 
-    public static String getDriverInfo(String driverId) {
+    public static void getDriverInfo(final String driverId) {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = database.getReference("drivers").child(driverId);
-        final String[] info = new String[]{"", "", ""};
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+
+        final DriverInfo driverInfo = new DriverInfo();
+
+        ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                info[0] = dataSnapshot.child("name").getValue(String.class);
-                info[1] = dataSnapshot.child("email").getValue(String.class);
-                info[2] = dataSnapshot.child("vehicle").getValue(String.class);
+                DriverInfo tmp = dataSnapshot.getValue(DriverInfo.class);
+                Customer.getInstance().updateDriverInfo(tmp);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.d("getDriverInfo", "Cancelled");
             }
-        });
+        };
 
-
-        return info[0] + "; " + info[1] +"; "+info[2];
+        databaseReference.addListenerForSingleValueEvent(listener);
     }
 
     public static void registerCustomerToFirebase() {
