@@ -5,29 +5,112 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/side_editadress_background"
     tools:context=".EditAddressActivity">
 
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/idCardViewDestination"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:layout_marginTop="5dp"
-        app:cardCornerRadius="4dp">
-        <fragment
-            android:id="@+id/place_autocomplete_fragment_destination"
-            android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
-    </android.support.v7.widget.CardView>
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
 
-    <Button
-        android:id="@+id/btnSubmitAddress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="OK"/>
+        >
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            >
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            android:orientation="vertical"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                >
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Seaching Location"
+                    android:textSize="25dp"
+                    android:gravity="center"
+                    android:textColor="#184785"
+                    android:textColorHighlight="@android:color/primary_text_dark"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+
+
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="10"
+                android:padding="5dp"
+                android:orientation="vertical"
+                android:background="@android:color/transparent">
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/idCardViewDestination"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_marginTop="5dp"
+                    app:cardCornerRadius="4dp">
+                    <fragment
+                        android:id="@+id/place_autocomplete_fragment_destination"
+                        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.2">
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            >
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+
+
 
 
 </LinearLayout>

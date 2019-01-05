@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
     public void gotToCustomer(View view) {
         Intent intent = new Intent(MainActivity.this, CustomerMapActivity.class);
         startActivity(intent);
-        finish();
+
     }
     
     @Override

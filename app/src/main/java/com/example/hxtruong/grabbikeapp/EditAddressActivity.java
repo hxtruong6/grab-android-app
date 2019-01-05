@@ -43,18 +43,10 @@ public class EditAddressActivity extends AppCompatActivity {
 
        // EditText edtOrigin = (EditText)findViewById(R.id.edtOrigin);
         //final EditText edtDestination = (EditText)findViewById(R.id.edtDestination);
-        Button btnSubmit = (Button)findViewById(R.id.btnSubmitAddress);
 
         Intent intent = this.getIntent();
 
         registPlaceAutoComplete();
-
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new GetCoordinates().execute(address.replace(" ","+"));
-            }
-        });
 
 
     }

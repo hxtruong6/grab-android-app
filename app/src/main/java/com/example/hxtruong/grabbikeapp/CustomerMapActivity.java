@@ -51,7 +51,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private Location mLastLocation;
     private LatLng pickupLocation;
     private TextView originAddress;
-    private Double currentLatitude, currentLongitude;
+    private Double currentLatitude = 10.763261;
+    private Double currentLongitude = 106.682215;
 
     TextView tvOrigin, tvDestination;
 
@@ -81,7 +82,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
-        setOriginAddressToTextView();
+
 
     }
 
@@ -91,12 +92,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         mMap = googleMap;
 
-        LatLng hcmus = new LatLng(10.763261, 106.682215);
-        mMap.addMarker(new MarkerOptions()
-                .position(hcmus)
-                .title("Marker in HCMUS")
-        );
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hcmus, 15));
+        setOriginAddressToTextView();
 
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -198,6 +194,15 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 originAddress = (TextView)findViewById(R.id.tvOrigin);
                 currentLatitude = location.getLatitude();
                 currentLongitude = location.getLongitude();
+
+                LatLng mDefaultLocation = new LatLng(currentLatitude, currentLongitude);
+                mMap.addMarker(new MarkerOptions()
+                        .position(mDefaultLocation)
+                        .title("Your location!")
+                );
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, 18));
+
+
                 try{
                     Geocoder geo = new Geocoder(CustomerMapActivity.this.getApplicationContext(), Locale.getDefault());
                     List<Address> addresses = geo.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
