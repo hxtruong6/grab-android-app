@@ -2,6 +2,8 @@ package core.driver;
 
 import android.location.Location;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import core.helper.FirebaseHelper;
 import core.helper.MyHelper;
 
@@ -13,14 +15,14 @@ public class Driver {
     Boolean isWorking = false;
     private IDriverListener mListener;
 
-    public Location mLastKnownLocation; //tracking gps
+    public LatLng mLastKnownLocation; //tracking gps
 
     private Driver() {
         initDriverData();
     }
 
     public void initDriverData() {
-        mLastKnownLocation = MyHelper.createLocation(1.2f, 2.3f);
+        mLastKnownLocation = new LatLng(1.2f, 2.3f);
     }
 
     public void registerIDriverInterface(IDriverListener listener){
@@ -30,7 +32,7 @@ public class Driver {
 
     }
 
-    public void updateDriverLocation(Location loc){
+    public void updateDriverLocation(LatLng loc){
         mLastKnownLocation = loc;
 
         if(isWorking)
@@ -54,7 +56,7 @@ public class Driver {
 
     //Interface
     public interface IDriverListener {
-        void onDriverLocationChanged(Location loc);
+        void onDriverLocationChanged(LatLng loc);
         void receiveCustomerRequest(String customerRequestId);
     }
 

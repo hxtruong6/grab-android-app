@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.hxtruong.grabbikeapp.authentication.Authentication;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
             public void onClick(View v) {
                 Driver.getInstance().registerIDriverInterface(new Driver.IDriverListener() {
                     @Override
-                    public void onDriverLocationChanged(Location loc) {
+                    public void onDriverLocationChanged(LatLng loc) {
 
                     }
 
@@ -157,8 +158,10 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
 
 
     public void goToDriver(View view) {
+
         Intent intent = new Intent(MainActivity.this, DriverMapActivity.class);
         startActivity(intent);
+
     }
 
     public void gotToCustomer(View view) {
@@ -168,15 +171,15 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
     }
     
     @Override
-    public void onCustomerLocationChanged(Location loc) {
+    public void onCustomerLocationChanged(LatLng loc) {
         // Cập nhật vị trí customer
         MyHelper.toast(getApplicationContext(), "changed location: "+ Customer.getInstance().mLastKnownLocation.toString());
-        showDebugMsg("Customer Location Changed: " + loc.getLatitude()+", "+loc.getLongitude());
+        showDebugMsg("Customer Location Changed: " + loc.latitude+", "+loc.longitude);
     }
 
     @Override
-    public void onDriverLocationChanged(Location loc) {
-        showDebugMsg("Driver Location Changed: "+loc.getLatitude()+", " + loc.getLongitude());
+    public void onDriverLocationChanged(LatLng loc) {
+        showDebugMsg("Driver Location Changed: "+loc.latitude+", " + loc.longitude);
         //set lai location tai xe
     }
 
@@ -185,6 +188,11 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
         //String driverInfo = FirebaseHelper.getDriverInfo(driver);
         //showDebugMsg("Found a driver: "+ driver+"->"+ driverInfo);
         //
+    }
+
+    @Override
+    public void onDriverInfoReady() {
+
     }
 
     void showDebugMsg(String msg){
@@ -218,11 +226,6 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -239,10 +242,6 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
 
         }
 

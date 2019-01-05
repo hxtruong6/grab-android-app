@@ -1,7 +1,6 @@
 package com.example.hxtruong.grabbikeapp;
 
 import android.app.Dialog;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
@@ -10,14 +9,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -119,10 +115,8 @@ public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMap
     }
 
     private void GetPositionFromDatase() {
-        Location t = Customer.getInstance().mDriverLoction;
-        posDriver = new LatLng(t.getLatitude(), t.getLongitude());
-        t = Customer.getInstance().mLastKnownLocation;
-        posCustomer = new LatLng(t.getLatitude(), t.getLongitude());
+        posDriver = Customer.getInstance().mDriverLocation;
+        posCustomer = Customer.getInstance().mLastKnownLocation;
     }
 
     class AsyncUpdatePosition extends AsyncTask<Void, Integer, Void> {
@@ -142,8 +136,7 @@ public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMap
             while(true) //Cho đến khi tài xế tới được chỗ khách hàng hoặc tài xế bấm nút OnTrip
             {
                 SystemClock.sleep(300);
-                Location t = Customer.getInstance().mDriverLoction;
-                posDriver = new LatLng(t.getLatitude(), t.getLongitude());
+                posDriver = Customer.getInstance().mDriverLocation;
                 publishProgress(0);
             }
         }
@@ -157,18 +150,23 @@ public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMap
 
 
     @Override
-    public void onCustomerLocationChanged(Location location) {
+    public void onCustomerLocationChanged(LatLng location) {
         //TODO: delete
     }
 
     @Override
-    public void onDriverLocationChanged(Location location) {
+    public void onDriverLocationChanged(LatLng location) {
         //TODO: Update Driver location here :))
-        MyHelper.toast(this, "driver location changed: " + location.getLongitude() +", "+location.getLongitude());
+        MyHelper.toast(this, "driver location changed: " + location.latitude +", "+location.longitude);
     }
 
     @Override
     public void onBookingResult(String driver) {
         //TODO: delete
+    }
+
+    @Override
+    public void onDriverInfoReady() {
+
     }
 }

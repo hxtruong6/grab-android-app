@@ -2,28 +2,31 @@ package com.example.hxtruong.grabbikeapp.WaitingForFindingDriver;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.SystemClock;
+import android.util.Log;
 import android.widget.TextView;
 
-import com.example.hxtruong.grabbikeapp.CustomerMapActivity;
 import com.example.hxtruong.grabbikeapp.R;
+import com.google.android.gms.maps.model.LatLng;
 import com.example.hxtruong.grabbikeapp.UpdateMapRealtimeActivity;
-import com.example.hxtruong.grabbikeapp.route.ShowRouteActivity;
 
 import core.customer.Customer;
+import core.helper.FirebaseHelper;
+import core.helper.MyHelper;
 
-class AsyncTaskFindDriver extends AsyncTask<Void, Integer, Void> implements Customer.IUserListener{
+class AsyncTaskFindDriver extends AsyncTask<Void, Integer, Void> implements Customer.IUserListener {
 
     int count;
     int t1;
     boolean datimthaytaixe;
     TextView txtAnimation;
     Activity contextParent;
+    private boolean datimthaythongtintaixe;
 
-    public AsyncTaskFindDriver(Activity contextParent){
+    public AsyncTaskFindDriver(Activity contextParent) {
         this.contextParent = contextParent;
+        Customer.getInstance().registerIUserInterface(this);
     }
 
     @Override
@@ -33,6 +36,7 @@ class AsyncTaskFindDriver extends AsyncTask<Void, Integer, Void> implements Cust
         txtAnimation = contextParent.findViewById(R.id.txtAnimation);
         super.onPreExecute();
         datimthaytaixe = false;
+        datimthaythongtintaixe = false;
     }
 
     @Override
@@ -40,11 +44,11 @@ class AsyncTaskFindDriver extends AsyncTask<Void, Integer, Void> implements Cust
 
         //Gửi thông tin xuống Backend, gọi hàm gọi tài xế
 
-        while(true) {
+        while (true) {
             SystemClock.sleep(1000);
             publishProgress(1);
             t1++;
-            if (datimthaytaixe || t1 > 5) {
+            if (datimthaytaixe && datimthaythongtintaixe) {
                 publishProgress(0);
                 return null;
             }
@@ -75,16 +79,15 @@ class AsyncTaskFindDriver extends AsyncTask<Void, Integer, Void> implements Cust
         }
 
 
+    }
+
+    @Override
+    public void onCustomerLocationChanged(LatLng location) {
 
     }
 
     @Override
-    public void onCustomerLocationChanged(Location location) {
-
-    }
-
-    @Override
-    public void onDriverLocationChanged(Location location) {
+    public void onDriverLocationChanged(LatLng location) {
 
     }
 
@@ -92,6 +95,12 @@ class AsyncTaskFindDriver extends AsyncTask<Void, Integer, Void> implements Cust
     public void onBookingResult(String driver) {
         //timf dudwojc tai xe
         datimthaytaixe = true;
+        Log.d("xxx", "da tim duoc tai xe roi ne :))" + driver);
 
+    }
+
+    @Override
+    public void onDriverInfoReady() {
+        datimthaythongtintaixe = true;
     }
 }

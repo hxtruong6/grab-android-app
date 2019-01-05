@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import core.customer.Customer;
 import core.driver.Driver;
 
@@ -33,9 +35,9 @@ public class GpsServices extends Service {
         {
             Log.e(TAG, "onLocationChanged: " + location);
             mLastLocation.set(location);
-
-            Customer.getInstance().updateCustomerLocation(mLastLocation);
-            Driver.getInstance().updateDriverLocation(mLastLocation);
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            Customer.getInstance().updateCustomerLocation(latLng);
+            Driver.getInstance().updateDriverLocation(latLng);
         }
 
         @Override
