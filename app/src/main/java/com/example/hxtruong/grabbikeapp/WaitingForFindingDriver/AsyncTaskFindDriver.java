@@ -2,21 +2,19 @@ package com.example.hxtruong.grabbikeapp.WaitingForFindingDriver;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.widget.TextView;
 
-import com.example.hxtruong.grabbikeapp.CustomerMapActivity;
 import com.example.hxtruong.grabbikeapp.R;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.database.FirebaseDatabase;
+import com.example.hxtruong.grabbikeapp.UpdateMapRealtimeActivity;
 
 import core.customer.Customer;
 import core.helper.FirebaseHelper;
 import core.helper.MyHelper;
 
-class AsyncTaskFindDriver extends AsyncTask<Void, Integer, Void> implements Customer.IUserListener{
+class AsyncTaskFindDriver extends AsyncTask<Void, Integer, Void> implements Customer.IUserListener {
 
     int count;
     int t1;
@@ -24,7 +22,7 @@ class AsyncTaskFindDriver extends AsyncTask<Void, Integer, Void> implements Cust
     TextView txtAnimation;
     Activity contextParent;
 
-    public AsyncTaskFindDriver(Activity contextParent){
+    public AsyncTaskFindDriver(Activity contextParent) {
         this.contextParent = contextParent;
     }
 
@@ -42,7 +40,7 @@ class AsyncTaskFindDriver extends AsyncTask<Void, Integer, Void> implements Cust
 
         //Gửi thông tin xuống Backend, gọi hàm gọi tài xế
 
-        while(true) {
+        while (true) {
             SystemClock.sleep(1000);
             publishProgress(1);
             t1++;
@@ -58,9 +56,8 @@ class AsyncTaskFindDriver extends AsyncTask<Void, Integer, Void> implements Cust
         super.onProgressUpdate(values);
         if (values[0] == 0) //tim thay tai xe
         {
-            Intent intent = new Intent(contextParent, CustomerMapActivity.class);
+            Intent intent = new Intent(contextParent, UpdateMapRealtimeActivity.class);
             contextParent.startActivity(intent);
-            MyHelper.toast(contextParent, "Da tim thay tai xe: " + FirebaseHelper.getDriverInfo(Customer.getInstance().driverFoundId));
         } else {
             String s = ". ";
             //if (values[0] == NOT_YET) //Chua tim duoc tai xe
@@ -76,7 +73,6 @@ class AsyncTaskFindDriver extends AsyncTask<Void, Integer, Void> implements Cust
                 txtAnimation.setText(s);
             }
         }
-
 
 
     }
