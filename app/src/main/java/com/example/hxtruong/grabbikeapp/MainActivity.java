@@ -151,8 +151,8 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
 
     @Override
     public void onBookingResult(String driver) {
-        String driverInfo = FirebaseHelper.getDriverInfo(driver);
-        showDebugMsg("Found a driver: "+ driver+"->"+ driverInfo);
+        //String driverInfo = FirebaseHelper.getDriverInfo(driver);
+        //showDebugMsg("Found a driver: "+ driver+"->"+ driverInfo);
         //
     }
 

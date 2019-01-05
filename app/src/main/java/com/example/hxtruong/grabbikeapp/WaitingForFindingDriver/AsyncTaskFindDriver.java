@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.example.hxtruong.grabbikeapp.CustomerMapActivity;
 import com.example.hxtruong.grabbikeapp.R;
+import com.example.hxtruong.grabbikeapp.UpdateMapRealtimeActivity;
+import com.example.hxtruong.grabbikeapp.route.ShowRouteActivity;
 
 import core.customer.Customer;
 
@@ -42,7 +44,7 @@ class AsyncTaskFindDriver extends AsyncTask<Void, Integer, Void> implements Cust
             SystemClock.sleep(1000);
             publishProgress(1);
             t1++;
-            if (datimthaytaixe || t1 > 20) {
+            if (datimthaytaixe || t1 > 5) {
                 publishProgress(0);
                 return null;
             }
@@ -54,7 +56,7 @@ class AsyncTaskFindDriver extends AsyncTask<Void, Integer, Void> implements Cust
         super.onProgressUpdate(values);
         if (values[0] == 0) //tim thay tai xe
         {
-            Intent intent = new Intent(contextParent, CustomerMapActivity.class);
+            Intent intent = new Intent(contextParent, UpdateMapRealtimeActivity.class);
             contextParent.startActivity(intent);
         } else {
             String s = ". ";

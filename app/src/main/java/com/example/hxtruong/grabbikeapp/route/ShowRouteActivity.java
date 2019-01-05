@@ -65,6 +65,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     private void Book() {
+        Customer.getInstance().sendBookingRequest();
         Intent intent = new Intent(ShowRouteActivity.this, WaitForFindingDriver.class);
         startActivity(intent);
     }
