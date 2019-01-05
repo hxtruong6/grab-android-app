@@ -27,9 +27,9 @@ public class Driver {
 
     public void registerIDriverInterface(IDriverListener listener){
         mListener = listener;
-        FirebaseHelper.registerDriverToFirebase(FirebaseHelper.getUser().getUid(), "driversAvailable", mLastKnownLocation);
+        // TODO: update available driver
+//        FirebaseHelper.registerDriverToFirebase(FirebaseHelper.getUser().getUid(), "driversAvailable", mLastKnownLocation);
         FirebaseHelper.startListenCustomerRequest();
-
     }
 
     public void updateDriverLocation(LatLng loc){
@@ -58,6 +58,10 @@ public class Driver {
     public interface IDriverListener {
         void onDriverLocationChanged(LatLng loc);
         void receiveCustomerRequest(String customerRequestId);
+    }
+
+    public interface IOnGetDataDriverCallback {
+        void onGetLocationCallback(LatLng driverLoc);
     }
 
 }

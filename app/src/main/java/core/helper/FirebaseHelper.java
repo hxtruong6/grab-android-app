@@ -1,6 +1,5 @@
 package core.helper;
 
-import android.location.Location;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -16,20 +15,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import core.customer.Customer;
 import core.driver.Driver;
@@ -208,34 +196,25 @@ public class FirebaseHelper {
 
     public static void startListenCustomerRequest() {
         final String driverId = "anhtaixe001";
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference myRef = database.getReference("driversAvailable").
-                child(driverId);
+        final DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("driversAvailable").child(driverId);
 
         myRef.child("customerRequestId").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String customerRequestId = dataSnapshot.getValue(String.class);
-                Log.d("ListenCustomerRequest:", customerRequestId);
+                if (!dataSnapshot.exists()) return;
+                final String customerRequestId = dataSnapshot.getValue(String.class);
+                Log.d("xxx", "ListenCustomerRequest id: " + customerRequestId);
+                getDriversAvailableLocation(driverId, new Driver.IOnGetDataDriverCallback() {
+                    @Override
+                    public void onGetLocationCallback(LatLng driverLoc) {
+                        //move availableDriver to Working driver
+                        registerDriverToFirebase(driverId, "driversWorking", driverLoc);
+                        Log.d("xxx", "remove ref: " + driverId);
+                        myRef.removeValue();
+                        Driver.getInstance().receiveAndStartTripWithCustomerRequest(customerRequestId);
+                    }
+                });
 
-                if (customerRequestId != null && !customerRequestId.isEmpty() && !customerRequestId.equals("empty")) {
-                    //moveAvailableDriverToWorkingDriver(dataSnapshot);
-                    List<Object> map = (List<Object>) dataSnapshot.getValue();
-                    double locationLat = 0;
-                    double locationLng = 0;
-                    if (map.get(0) != null)
-                        locationLat = Double.parseDouble(map.get(0).toString());
-
-                    if (map.get(1) != null)
-                        locationLng = Double.parseDouble(map.get(1).toString());
-
-                    LatLng driverLocation = new LatLng(locationLat, locationLng);
-                    registerDriverToFirebase(driverId, "driversWorking", driverLocation);
-
-                    Driver.getInstance().receiveAndStartTripWithCustomerRequest(customerRequestId);
-                    myRef.removeValue();
-
-                }
             }
 
             @Override
@@ -243,7 +222,34 @@ public class FirebaseHelper {
 
             }
         });
+    }
 
+    public static void getDriversAvailableLocation(String driverId, final Driver.IOnGetDataDriverCallback onGetDataDriverCallback) {
+        if (driverId == null) driverId = FirebaseHelper.getUid();
+        final DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("driversAvailable").child(driverId).child("l");
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Log.d("xxx", "getDriversAvailableLocation: " + dataSnapshot.toString());
+                    List<Object> map = (List<Object>) dataSnapshot.getValue();
+                    double locationLat = 0;
+                    double locationLng = 0;
+                    if (map.get(0) != null)
+                        locationLat = Double.parseDouble(map.get(0).toString());
+                    if (map.get(1) != null)
+                        locationLng = Double.parseDouble(map.get(1).toString());
+
+                    LatLng driverLocation = new LatLng(locationLat, locationLng);
+//                    Log.d("xxx", "driver location: " + driverLocation.toString());
+                    onGetDataDriverCallback.onGetLocationCallback(driverLocation);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 
     public static void moveAvailableDriverToWorkingDriver(DataSnapshot dataSnapshot) {
@@ -258,13 +264,13 @@ public class FirebaseHelper {
     }
 
     public static void getDriverInfo(final String driverId) {
-        Log.d("xxx get driverID: ", driverId);
-        DatabaseReference databaseReference =  FirebaseDatabase.getInstance().getReference("drivers").child(driverId);
+//        Log.d("xxx get driverID: ", driverId);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("drivers").child(driverId);
         ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 DriverInfo tmp = dataSnapshot.getValue(DriverInfo.class);
-                Log.d("xxx", "driver infor: " + tmp.toString());
+//                Log.d("xxx", "driver infor: " + tmp.toString());
                 Customer.getInstance().updateDriverInfo(tmp);
             }
 
@@ -297,6 +303,7 @@ public class FirebaseHelper {
     }
 
     public static void registerDriverToFirebase(String driverId, String path, LatLng location) {
+        Log.d("xxx", "registerDriver: [id:" + driverId + "|Path: " + path + "|Loc: " + location.toString() + "]");
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
         GeoFire geoFire = new GeoFire(ref);
 
