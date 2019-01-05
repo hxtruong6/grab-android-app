@@ -9,11 +9,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -110,9 +113,27 @@ public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMap
 
         //TODO: get position of Driver and Customer from Database
         GetPositionFromDatase();
+        ZoomMap();
         updateMarkerCustomer();
         updateMarkerDriver();
     }
+
+    private void ZoomMap() {
+        LatLngBounds bounds = CreateBounds(posDriver, posCustomer);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+    }
+
+    private LatLngBounds CreateBounds(LatLng p1, LatLng p2) {
+        LatLngBounds bounds = null;
+        double minLat, minLng, maxLat, maxLng;
+        minLat = Math.min(p1.latitude, p2.latitude);
+        maxLat = Math.max(p1.latitude, p2.latitude);
+        minLng = Math.min(p1.longitude, p2.longitude);
+        maxLng = Math.max(p1.longitude, p2.longitude);
+        bounds = new LatLngBounds(new LatLng(minLat, minLng), new LatLng(maxLat, maxLng));
+        return bounds;
+    }
+
 
     private void GetPositionFromDatase() {
         posDriver = Customer.getInstance().mDriverLocation;
