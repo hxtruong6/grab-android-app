@@ -21,8 +21,8 @@ public class Customer {
     public Location mLastKnownLocation; //tracking gps
     Location mDriverLoction;
 
-    Location mStartLoction;
-    Location mEndLocation;
+    public Location mStartLoction;
+    public Location mEndLocation;
 
     public LatLng pickupLocation;
     public String driverFoundId;

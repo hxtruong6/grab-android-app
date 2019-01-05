@@ -146,13 +146,14 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
     @Override
     public void onDriverLocationChanged(Location loc) {
         showDebugMsg("Driver Location Changed: "+loc.getLatitude()+", " + loc.getLongitude());
+        //set lai location tai xe
     }
 
     @Override
     public void onBookingResult(String driver) {
         String driverInfo = FirebaseHelper.getDriverInfo(driver);
         showDebugMsg("Found a driver: "+ driver+"->"+ driverInfo);
-
+        //
     }
 
     void showDebugMsg(String msg){

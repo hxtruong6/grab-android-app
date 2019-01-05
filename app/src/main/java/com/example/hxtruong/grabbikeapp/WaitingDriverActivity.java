@@ -3,6 +3,7 @@ package com.example.hxtruong.grabbikeapp;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.example.hxtruong.grabbikeapp.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -38,9 +39,13 @@ public class WaitingDriverActivity extends FragmentActivity implements OnMapRead
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        //Thông báo cho người dùng đã tìm thấy tài xế (Customize Dialog)
+
+        //Lấy vị trí tài xế
+
+        //Hiển thị vị trí của tài xế và khách hàng
+
+        //Thay đổi vị trí tài xế theo thời gian thực
+
     }
 }

@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.hxtruong.grabbikeapp.route.ShowRouteActivity;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.ConnectionResult;
@@ -168,14 +169,21 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             String address = data.getStringExtra("address");
             String lat = data.getStringExtra("lat");
             String lng = data.getStringExtra("lng");
-            if(requestCode == CODE_ORIGIN){
+            if (requestCode == CODE_ORIGIN) {
                 tvOrigin.setText(address);
                 Customer.getInstance().setStartLocation(Float.valueOf(lat), Float.valueOf(lng));
                 //
-            }else if(requestCode == CODE_DESTINATION){
+            } else if (requestCode == CODE_DESTINATION) {
                 tvDestination.setText(address);
                 Customer.getInstance().setEndLocation(Float.valueOf(lat), Float.valueOf(lng));
                 //
+            }
+
+            if (tvOrigin.getText().toString() != "" && tvDestination.getText().toString() != "")
+            {
+                Intent intent = new Intent(CustomerMapActivity.this, ShowRouteActivity.class);
+                intent.putExtra("ID", "CUSTOMERMAP");
+                startActivity(intent);
             }
 
 
