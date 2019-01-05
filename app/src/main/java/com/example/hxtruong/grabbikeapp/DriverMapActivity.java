@@ -15,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -31,8 +32,9 @@ import java.util.List;
 import java.util.Locale;
 
 import core.driver.Driver;
+import core.helper.MyHelper;
 
-public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, Driver.IDriverListener {
 
     private GoogleMap mMap;
 
@@ -47,7 +49,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
+        Driver.getInstance().registerIDriverInterface(this);
 
     }
 
@@ -71,9 +73,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         dialog.setMessage("Searching your location....");
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();*/
-
-
-
 
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -143,10 +142,25 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
 
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
 
         }
+    }
+
+    @Override
+    public void onDriverLocationChanged(LatLng loc) {
+        //
+
+    }
+
+    @Override
+    public void receiveCustomerRequest(String customerRequestId) {
+        //TODO:show a dialog
+        //MyHelper.toast(this, "received a booking");
+        MyHelper.toast(this,"F*ucking customer. I WILL CATCH YOU RIGHT NOWWWWW!!!!");
+        MyHelper.toast(this,"F*ucking customer. I WILL CATCH YOU RIGHT NOWWWWW!!!!");
+        MyHelper.toast(this,"F*ucking customer. I WILL CATCH YOU RIGHT NOWWWWW!!!!");
+        MyHelper.toast(this,"F*ucking customer. I WILL CATCH YOU RIGHT NOWWWWW!!!!");
+        MyHelper.toast(this,"F*ucking customer. I WILL CATCH YOU RIGHT NOWWWWW!!!!");
     }
 }
