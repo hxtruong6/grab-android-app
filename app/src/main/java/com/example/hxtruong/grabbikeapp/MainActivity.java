@@ -151,6 +151,11 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
         //
     }
 
+    @Override
+    public void onDriverInfoReady() {
+
+    }
+
     void showDebugMsg(String msg){
         ((TextView)findViewById(R.id.tvDebug)).setText(msg);
     }

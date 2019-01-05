@@ -4,6 +4,7 @@ import android.location.Location;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 import core.driver.Driver;
@@ -35,7 +36,7 @@ public class Customer {
         mLastKnownLocation = new LatLng(1.2f, 2.3f);
         mStartLocation = new LatLng(2.0f, 10.2f);
         mEndLocation = new LatLng(2.2f, .9f);
-
+        mDriverLocation = new LatLng(10.0123, 106.999291);
     }
 
     public void registerIUserInterface(IUserListener listener) {
@@ -49,16 +50,21 @@ public class Customer {
         // TODO: send the booking later. Just simple for now
         FirebaseHelper.sendBookingLocation(mStartLocation, mEndLocation);
         FirebaseHelper.receiveBookingResultFromFirebase();
-        Log.d("xxx ", "found driver Id"+ driverId);
     }
 
     public void startUpdateDriverLocation() {
-        if (driverId != null && !driverId.isEmpty()) {
+        if (driverId != null ) {
             // Call getUpdateDriverLocation to update driver location for customer UI
-            isBooking = true;
-            if (mListener != null)
-                mListener.onBookingResult(driverId);
+            Log.d("xxx", "startUpdateDriverLocation -> id: " + driverId);
+            FirebaseHelper.getDriverInfo(driverId);
+            //Log.d("xxx ", "get driver info: " + driverInfo.toString());
             FirebaseHelper.getUpdateDriverLocation(driverId);
+            isBooking = true;
+
+            if (mListener != null) {
+                //Log.d("xxx ", "get driver info: " + driverInfo.toString());
+                mListener.onBookingResult(driverId);
+            }
         }
     }
 
@@ -67,8 +73,9 @@ public class Customer {
         if (isBooking)
             FirebaseHelper.updateCustomerLocationToFirebase(loc);
 
-        if (mListener != null)
+        if (mListener != null) {
             mListener.onCustomerLocationChanged(loc);
+        }
     }
 
 
@@ -89,11 +96,15 @@ public class Customer {
     }
 
     public void updateDriverInfo(DriverInfo tmp) {
+        Log.d("xxx", "updateDriverInfo: "+tmp.toString());
         this.driverInfo = tmp;
+        if (mListener != null) {
+            mListener.onDriverInfoReady();
+        }
     }
 
     public DriverInfo getDriverInfo() {
-        if (!driverInfo.isEmpty())
+        if (driverInfo != null && !driverInfo.isEmpty())
             return driverInfo;
         return null;
     }
@@ -106,6 +117,8 @@ public class Customer {
         void onDriverLocationChanged(LatLng location);
 
         void onBookingResult(String driver);
+
+        void onDriverInfoReady();
     }
 
 }

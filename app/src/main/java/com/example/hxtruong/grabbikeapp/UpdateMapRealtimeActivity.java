@@ -164,4 +164,9 @@ public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMap
     public void onBookingResult(String driver) {
         //TODO: delete
     }
+
+    @Override
+    public void onDriverInfoReady() {
+
+    }
 }

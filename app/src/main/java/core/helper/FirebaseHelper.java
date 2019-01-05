@@ -109,6 +109,9 @@ public class FirebaseHelper {
                     // delete customerRequest
                     DatabaseReference customerRequestRef = FirebaseDatabase.getInstance().getReference().child("customerRequest").child(customerId);
                     customerRequestRef.removeValue();
+
+                    // update
+                    Customer.getInstance().startUpdateDriverLocation();
                 }
             }
 
@@ -256,21 +259,19 @@ public class FirebaseHelper {
     }
 
     public static void getDriverInfo(final String driverId) {
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = database.getReference("drivers").child(driverId);
-
-        final DriverInfo driverInfo = new DriverInfo();
-
+        Log.d("xxx get driverID: ", driverId);
+        DatabaseReference databaseReference =  FirebaseDatabase.getInstance().getReference("drivers").child(driverId);
         ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 DriverInfo tmp = dataSnapshot.getValue(DriverInfo.class);
+                Log.d("xxx", "driver infor: " + tmp.toString());
                 Customer.getInstance().updateDriverInfo(tmp);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("getDriverInfo", "Cancelled");
+                Log.d("xxx ", "get driver info Cancelled");
             }
         };
         databaseReference.addListenerForSingleValueEvent(listener);

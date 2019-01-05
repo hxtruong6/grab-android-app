@@ -131,6 +131,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         //String string = FirebaseHelper.getDriverInfo(driver);
     }
 
+    @Override
+    public void onDriverInfoReady() {
+
+    }
+
     public void editOriginAndDestination(int requestCode) {
         Intent intent = new Intent(CustomerMapActivity.this, EditAddressActivity.class);
         this.startActivityForResult(intent, requestCode);

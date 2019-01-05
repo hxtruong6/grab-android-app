@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.SystemClock;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.example.hxtruong.grabbikeapp.R;
@@ -21,9 +22,11 @@ class AsyncTaskFindDriver extends AsyncTask<Void, Integer, Void> implements Cust
     boolean datimthaytaixe;
     TextView txtAnimation;
     Activity contextParent;
+    private boolean datimthaythongtintaixe;
 
     public AsyncTaskFindDriver(Activity contextParent) {
         this.contextParent = contextParent;
+        Customer.getInstance().registerIUserInterface(this);
     }
 
     @Override
@@ -33,6 +36,7 @@ class AsyncTaskFindDriver extends AsyncTask<Void, Integer, Void> implements Cust
         txtAnimation = contextParent.findViewById(R.id.txtAnimation);
         super.onPreExecute();
         datimthaytaixe = false;
+        datimthaythongtintaixe = false;
     }
 
     @Override
@@ -44,7 +48,7 @@ class AsyncTaskFindDriver extends AsyncTask<Void, Integer, Void> implements Cust
             SystemClock.sleep(1000);
             publishProgress(1);
             t1++;
-            if (datimthaytaixe) {
+            if (datimthaytaixe && datimthaythongtintaixe) {
                 publishProgress(0);
                 return null;
             }
@@ -91,6 +95,12 @@ class AsyncTaskFindDriver extends AsyncTask<Void, Integer, Void> implements Cust
     public void onBookingResult(String driver) {
         //timf dudwojc tai xe
         datimthaytaixe = true;
+        Log.d("xxx", "da tim duoc tai xe roi ne :))" + driver);
 
+    }
+
+    @Override
+    public void onDriverInfoReady() {
+        datimthaythongtintaixe = true;
     }
 }
