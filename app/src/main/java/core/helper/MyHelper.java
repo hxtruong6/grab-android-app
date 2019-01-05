@@ -8,6 +8,8 @@ import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.Random;
 
 public class MyHelper {
@@ -32,8 +34,8 @@ public class MyHelper {
         return loc;
     }
 
-    public static Location createRandomLocation() {
+    public static LatLng createRandomLocation() {
         Random rnd = new Random();
-        return createLocation(rnd.nextDouble(), rnd.nextDouble());
+        return new LatLng(rnd.nextDouble(), rnd.nextDouble());
     }
 }

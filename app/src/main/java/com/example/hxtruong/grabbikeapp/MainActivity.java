@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.hxtruong.grabbikeapp.authentication.Authentication;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -30,13 +31,6 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
 
-        findViewById(R.id.btnBook).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Customer.getInstance().sendBookingRequest();
-            }
-        });
-
         findViewById(R.id.btnChangeCustomerLoction).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
             public void onClick(View v) {
                 Driver.getInstance().registerIDriverInterface(new Driver.IDriverListener() {
                     @Override
-                    public void onDriverLocationChanged(Location loc) {
+                    public void onDriverLocationChanged(LatLng loc) {
 
                     }
 
@@ -128,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
 
 
     public void goToDriver(View view) {
+
     }
 
     public void gotToCustomer(View view) {
@@ -137,15 +132,15 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
     }
     
     @Override
-    public void onCustomerLocationChanged(Location loc) {
+    public void onCustomerLocationChanged(LatLng loc) {
         // Cập nhật vị trí customer
         MyHelper.toast(getApplicationContext(), "changed location: "+ Customer.getInstance().mLastKnownLocation.toString());
-        showDebugMsg("Customer Location Changed: " + loc.getLatitude()+", "+loc.getLongitude());
+        showDebugMsg("Customer Location Changed: " + loc.latitude+", "+loc.longitude);
     }
 
     @Override
-    public void onDriverLocationChanged(Location loc) {
-        showDebugMsg("Driver Location Changed: "+loc.getLatitude()+", " + loc.getLongitude());
+    public void onDriverLocationChanged(LatLng loc) {
+        showDebugMsg("Driver Location Changed: "+loc.latitude+", " + loc.longitude);
         //set lai location tai xe
     }
 

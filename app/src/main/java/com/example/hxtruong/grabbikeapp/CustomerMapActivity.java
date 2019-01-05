@@ -49,8 +49,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private static final int CODE_ORIGIN = 4000;
     private static final int CODE_DESTINATION = 4001;
     private GoogleMap mMap;
-    private Location mLastLocation;
-    private LatLng pickupLocation;
+    private LatLng mLastLocation;
     private TextView originAddress;
     private Double currentLatitude = 10.763261;
     private Double currentLongitude = 106.682215;
@@ -83,8 +82,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
-
-
+        // TODO: delete later
+        Intent intent = new Intent(CustomerMapActivity.this, ShowRouteActivity.class);
+        intent.putExtra("ID", "CUSTOMERMAP");
+        startActivity(intent);
     }
 
 
@@ -106,48 +107,21 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     @Override
     public void onLocationChanged(Location location) {
         if (getApplicationContext() != null) {
-            mLastLocation = location;
-
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+             mLastLocation = latLng;
             Log.d("xcustomer", "On location changed: " + latLng.toString());
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
         }
     }
 
-
-    public void OnCustomerRequestDriverBtn(View view) {
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        if (userId == null) {
-            Log.d("xxx customer", "userId NULL");
-        }
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
-        GeoFire geoFire = new GeoFire(ref);
-        // TODO: change this hard code here -> need to get curretun location
-        mLastLocation = new Location("");
-        mLastLocation.setLatitude(0.15);
-        mLastLocation.setLongitude(0.31);
-        geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()), new GeoFire.CompletionListener() {
-            @Override
-            public void onComplete(String key, DatabaseError error) {
-                Toast.makeText(getApplicationContext(), "Set customer pick up location", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-        mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here"));
-
-        //((Button) view.findViewById(R.id.request)).setText("Getting your Driver....");
-    }
-
     @Override
-    public void onCustomerLocationChanged(Location location) {
+    public void onCustomerLocationChanged(LatLng location) {
         //
-
     }
 
     @Override
-    public void onDriverLocationChanged(Location location) {
+    public void onDriverLocationChanged(LatLng location) {
 
     }
 
@@ -209,7 +183,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         .title("Your location!")
                 );
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, 18));
-
+                // TODO: update user location
 
                 try{
                     Geocoder geo = new Geocoder(CustomerMapActivity.this.getApplicationContext(), Locale.getDefault());

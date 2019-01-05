@@ -9,8 +9,12 @@ import android.widget.TextView;
 
 import com.example.hxtruong.grabbikeapp.CustomerMapActivity;
 import com.example.hxtruong.grabbikeapp.R;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.FirebaseDatabase;
 
 import core.customer.Customer;
+import core.helper.FirebaseHelper;
+import core.helper.MyHelper;
 
 class AsyncTaskFindDriver extends AsyncTask<Void, Integer, Void> implements Customer.IUserListener{
 
@@ -42,7 +46,7 @@ class AsyncTaskFindDriver extends AsyncTask<Void, Integer, Void> implements Cust
             SystemClock.sleep(1000);
             publishProgress(1);
             t1++;
-            if (datimthaytaixe || t1 > 20) {
+            if (datimthaytaixe) {
                 publishProgress(0);
                 return null;
             }
@@ -56,6 +60,7 @@ class AsyncTaskFindDriver extends AsyncTask<Void, Integer, Void> implements Cust
         {
             Intent intent = new Intent(contextParent, CustomerMapActivity.class);
             contextParent.startActivity(intent);
+            MyHelper.toast(contextParent, "Da tim thay tai xe: " + FirebaseHelper.getDriverInfo(Customer.getInstance().driverFoundId));
         } else {
             String s = ". ";
             //if (values[0] == NOT_YET) //Chua tim duoc tai xe
@@ -77,12 +82,12 @@ class AsyncTaskFindDriver extends AsyncTask<Void, Integer, Void> implements Cust
     }
 
     @Override
-    public void onCustomerLocationChanged(Location location) {
+    public void onCustomerLocationChanged(LatLng location) {
 
     }
 
     @Override
-    public void onDriverLocationChanged(Location location) {
+    public void onDriverLocationChanged(LatLng location) {
 
     }
 
