@@ -84,6 +84,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
+
+        // DELETE IT
+        Customer.getInstance().getDriverList();
+
      /*   // TODO: delete later
         Intent intent = new Intent(CustomerMapActivity.this, ShowRouteActivity.class);
         intent.putExtra("ID", "CUSTOMERMAP");
@@ -140,7 +144,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         if (getApplicationContext() != null) {
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             mLastLocation = latLng;
-            Customer.getInstance().mLastKnownLocation = latLng;
+            Customer.getInstance().updateCustomerLocation(new LatLng(location.getLatitude(), location.getLongitude()));
+            MyHelper.toast(getApplicationContext(), "Customer Location changed ON MAP!"+location.getLatitude()+", "+location.getLongitude());
+            Log.d("xxx", "Customer location changed on map" +location.getLatitude()+", "+location.getLongitude());
             Log.d("xxx", "On location changed: on map " + latLng.toString());
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
@@ -195,12 +201,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                 Customer.getInstance().updateCustomerLocation(new LatLng(location.getLatitude(), location.getLongitude()));
                 MyHelper.toast(getApplicationContext(), "Customer Location changed ON MAP!"+location.getLatitude()+", "+location.getLongitude());
-                Log.d("xxx", "Customer location changed on map" + +location.getLatitude()+", "+location.getLongitude());
+                Log.d("xxx", "Customer location changed on map" +location.getLatitude()+", "+location.getLongitude());
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLastLocation, 18));
                 // TODO: update user location
 
-                showNearDriver();
+                //showNearDriver();
 
 
                 try{

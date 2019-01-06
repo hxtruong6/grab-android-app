@@ -1,16 +1,19 @@
 package core.customer;
 
-import android.location.Location;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.database.FirebaseDatabase;
 
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
 
 import core.driver.Driver;
+=======
+import java.util.List;
+
+>>>>>>> bba245d1af3e367aff5667144e50517d8110164e
 import core.driver.DriverInfo;
 import core.helper.FirebaseHelper;
 
@@ -25,6 +28,9 @@ public class Customer {
     private IUserListener mListener;
     Boolean isBooking = false;
 
+    public Boolean customerReady = false;
+    public Boolean driverLocationReady = false;
+
     public String driverId;
     public LatLng mLastKnownLocation; //tracking gps
     public LatLng mDriverLocation;
@@ -37,22 +43,29 @@ public class Customer {
     }
 
     public void initCustomerData() {
+<<<<<<< HEAD
         mLastKnownLocation = new LatLng(0, 0);
         mStartLocation = new LatLng(10.12423f, 106.9141291f);
         mEndLocation = new LatLng(10.1234647f, 106.945142f);
         mDriverLocation = new LatLng(10.0123, 106.999291);
+=======
+        mLastKnownLocation = new LatLng(0,0);//10.12423, 106.9141291);
+        mStartLocation = new LatLng(0,0);//10.12423f, 106.9141291f);
+        mEndLocation = new LatLng(0,0);//10.1234647f, 106.945142f);
+        mDriverLocation = new LatLng(0,0);//10.0123, 106.999291);
+>>>>>>> bba245d1af3e367aff5667144e50517d8110164e
     }
 
     public void registerIUserInterface(IUserListener listener) {
         mListener = listener;
-        FirebaseHelper.registerCustomerToFirebase();
+        FirebaseHelper.registerCustomerInfoToFirebase();
     }
 
     // Truong
     public void sendBookingRequest() {
         //Booking booking = new Booking(mStartLocation, mEndLocation);
         // TODO: send the booking later. Just simple for now
-        FirebaseHelper.sendBookingLocation(mStartLocation, mEndLocation);
+        FirebaseHelper.sendBookingLocation(mStartLocation, mEndLocation, mLastKnownLocation);
         FirebaseHelper.receiveBookingResultFromFirebase();
     }
 
@@ -74,6 +87,8 @@ public class Customer {
 
     public void updateCustomerLocation(LatLng loc) {
         mLastKnownLocation = loc;
+        driverLocationReady = true;
+
         if (isBooking)
             FirebaseHelper.updateCustomerLocationToFirebase(loc);
 
@@ -115,6 +130,7 @@ public class Customer {
     }
 
     public List<LatLng> getDriverList() {
+<<<<<<< HEAD
         //TODO: get available driver list from firebase
 
         // Example:
@@ -126,6 +142,12 @@ public class Customer {
         list.add(new LatLng(10.767548, 106.678859));
         list.add(new LatLng(10.755547, 106.685260));
         return list;
+=======
+        Log.d("xxx", "start get list driver");
+        FirebaseHelper.getDriverLocationList();
+        Log.d("xxx", "end get list driver");
+        return null;
+>>>>>>> bba245d1af3e367aff5667144e50517d8110164e
     }
 
     //Interface
@@ -134,5 +156,9 @@ public class Customer {
         void onDriverLocationChanged(LatLng location);
         void onBookingResult(String driver);
         void onDriverInfoReady();
+    }
+
+    public interface IFirebaseHelperCallBack {
+        void onGetListAvailableDriversCallBack();
     }
 }

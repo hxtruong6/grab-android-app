@@ -48,8 +48,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        Driver.getInstance().registerIDriverInterface(this);
-
     }
 
 
@@ -65,7 +63,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -80,7 +77,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
         setOriginAddressToTextView();
 
-
+        Driver.getInstance().registerIDriverInterface(this);
     }
 
 
@@ -91,7 +88,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             LocationListener locationListener = new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
-
                     mLastLocation = new LatLng(location.getLatitude(), location.getLongitude());
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLastLocation, 18));
                 }
@@ -139,10 +135,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     public void receiveCustomerRequest(String customerRequestId) {
         //TODO:show a dialog
         //MyHelper.toast(this, "received a booking");
-        MyHelper.toast(this,"F*ucking customer. I WILL CATCH YOU RIGHT NOWWWWW!!!!");
-        MyHelper.toast(this,"F*ucking customer. I WILL CATCH YOU RIGHT NOWWWWW!!!!");
-        MyHelper.toast(this,"F*ucking customer. I WILL CATCH YOU RIGHT NOWWWWW!!!!");
-        MyHelper.toast(this,"F*ucking customer. I WILL CATCH YOU RIGHT NOWWWWW!!!!");
-        MyHelper.toast(this,"F*ucking customer. I WILL CATCH YOU RIGHT NOWWWWW!!!!");
+        MyHelper.toast(this, "F*ucking customer. I WILL CATCH YOU RIGHT NOWWWWW!!!!");
+        MyHelper.toast(this, "F*ucking customer. I WILL CATCH YOU RIGHT NOWWWWW!!!!");
+        MyHelper.toast(this, "F*ucking customer. I WILL CATCH YOU RIGHT NOWWWWW!!!!");
+        MyHelper.toast(this, "F*ucking customer. I WILL CATCH YOU RIGHT NOWWWWW!!!!");
+        MyHelper.toast(this, "F*ucking customer. I WILL CATCH YOU RIGHT NOWWWWW!!!!");
     }
 }

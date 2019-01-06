@@ -56,6 +56,7 @@
             android:label="@string/title_activity_update_map_realtime" />
         <activity android:name=".WaitingLocationActivity" />
         <activity android:name=".WaitingLocationDriverActivity"></activity>
+        <activity android:name=".FinishTripActivity"></activity>
     </application>
 
 </manifest>

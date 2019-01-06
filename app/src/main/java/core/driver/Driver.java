@@ -4,11 +4,15 @@ import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.List;
+
 import core.helper.FirebaseHelper;
 import core.helper.MyHelper;
 
 public class Driver {
     private static final Driver ourInstance = new Driver();
+    public List<LatLng> routePoints;
+
     public static Driver getInstance() {
         return ourInstance;
     }
@@ -22,13 +26,13 @@ public class Driver {
     }
 
     public void initDriverData() {
-        mLastKnownLocation = new LatLng(1.2f, 2.3f);
+        mLastKnownLocation = new LatLng(0,0);//10.234512f, 106.3872551f);
     }
 
     public void registerIDriverInterface(IDriverListener listener){
         mListener = listener;
-        // TODO: update available driver
-//        FirebaseHelper.registerDriverToFirebase(FirebaseHelper.getUser().getUid(), "driversAvailable", mLastKnownLocation);
+        FirebaseHelper.registerDriverInfoToFirebase();
+        FirebaseHelper.registerDriverToFirebase( "driversAvailable", mLastKnownLocation);
         FirebaseHelper.startListenCustomerRequest();
     }
 
