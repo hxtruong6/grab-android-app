@@ -61,8 +61,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private Button btnPickup, btnPickDown, btnFakeLoc ;
     TextView tvPrice;
     private ProgressDialog progressDialog;
-    private List<Polyline> polylinePaths;
-    private LatLng latLngStart, latLngEnd;
+    public static List<Polyline> polylinePaths;
+    public static LatLng latLngStart, latLngEnd;
     Boolean statLocReady, endLocReady;
     List<LatLng> list;
     List<Route> myRoute;
