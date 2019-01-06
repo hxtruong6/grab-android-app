@@ -37,9 +37,8 @@ import core.services.GpsServices;
 
 import static core.Definition.PERMISSIONS;
 
-public class MainActivity extends AppCompatActivity implements Customer.IUserListener, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public FirebaseAuth mAuth;
-    public FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,43 +59,16 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-
         mAuth = FirebaseAuth.getInstance();
-
-
-        findViewById(R.id.btnBook).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Customer.getInstance().sendBookingRequest();
-            }
-        });
 
         findViewById(R.id.btnChangeCustomerLoction).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Customer.getInstance().updateCustomerLocation(MyHelper.createRandomLocation());
-                Driver.getInstance().updateDriverLocation(MyHelper.createRandomLocation());
+//                Customer.getInstance().updateCustomerLocation(MyHelper.createRandomLocation());
+//                Driver.getInstance().updateDriverLocation(MyHelper.createRandomLocation());
             }
         });
 
-        findViewById(R.id.btnReceiveBook).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Driver.getInstance().registerIDriverInterface(new Driver.IDriverListener() {
-                    @Override
-                    public void onDriverLocationChanged(LatLng loc) {
-
-                    }
-
-                    @Override
-                    public void receiveCustomerRequest(String customerRequestId) {
-
-                    }
-                });
-                Driver.getInstance().updateDriverLocation(MyHelper.createRandomLocation());
-            }
-        });
     }
 
     private void startGpsService() {
@@ -107,13 +79,10 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
     @Override
     protected void onStart() {
         super.onStart();
-        if(!isLogined()){
+        checkAllPermissions();
+
+        if(!isLogined()) {
             login();
-        }
-        else {
-            Customer.getInstance().registerIUserInterface(this);
-            checkAllPermissions();
-            updateUI();
         }
     }
 
@@ -166,11 +135,6 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
 
     }
 
-
-    private void updateUI() {
-
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         switch (requestCode){
@@ -180,8 +144,6 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
                         MyHelper.toast(this, data.getStringExtra("AccessToken"));
                     else {
                         MyHelper.toast(this, "login successful");
-                        //loadUserData();
-                        updateUI();
                     }
                 }
                 else{
@@ -192,12 +154,6 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-    /*
-    * Our funtions
-    *
-    * */
-
 
     private void login() {
         Intent intentLogin = new Intent(this, Authentication.class);
@@ -218,10 +174,8 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
 
 
     public void goToDriver(View view) {
-
         Intent intent = new Intent(MainActivity.this, DriverMapActivity.class);
         startActivity(intent);
-
     }
 
     public void gotToCustomer(View view) {
@@ -229,38 +183,6 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
         startActivity(intent);
 
     }
-    
-    @Override
-    public void onCustomerLocationChanged(LatLng loc) {
-        // Cập nhật vị trí customer
-        MyHelper.toast(getApplicationContext(), "changed location: "+ Customer.getInstance().mLastKnownLocation.toString());
-        showDebugMsg("Customer Location Changed: " + loc.latitude+", "+loc.longitude);
-    }
-
-    @Override
-    public void onDriverLocationChanged(LatLng loc) {
-        showDebugMsg("Driver Location Changed: "+loc.latitude+", " + loc.longitude);
-        //set lai location tai xe
-    }
-
-    @Override
-    public void onBookingResult(String driver) {
-        //String driverInfo = FirebaseHelper.getDriverInfo(driver);
-        //showDebugMsg("Found a driver: "+ driver+"->"+ driverInfo);
-        //
-    }
-
-    @Override
-    public void onDriverInfoReady() {
-
-    }
-
-    void showDebugMsg(String msg){
-        ((TextView)findViewById(R.id.tvDebug)).setText(msg);
-    }
-
-
-
 
     @Override
     public void onBackPressed() {

@@ -19,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import core.customer.Customer;
 import core.driver.Driver;
@@ -271,7 +272,7 @@ public class FirebaseHelper {
         databaseReference.addListenerForSingleValueEvent(listener);
     }
 
-    public static void registerCustomerToFirebase() {
+    public static void registerCustomerInfoToFirebase() {
         //tạm thời ghi lên customer ở đây, sau này đăng kí xong sẽ ghi lên
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef2 = database.getReference("customers").child(getUid());
@@ -280,20 +281,36 @@ public class FirebaseHelper {
         myRef2.child("email").setValue(getUser().getEmail());
     }
 
-    public static void updateCustomerLocationToFirebase(LatLng loc) {
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference myRef = database.getReference("").child(getUid()).child("location");
-//
-//        myRef.child("lat").setValue(loc.latitude);
-//        myRef.child("lng").setValue(loc.longitude());
+    public static void registerDriverInfoToFirebase() {
+        //tạm thời ghi lên customer ở đây, sau này đăng kí xong sẽ ghi lên
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef2 = database.getReference("drivers").child(getUid());
 
-        // Khi customer đã booking thì thông tin request chueyenr đi đâu để tài xế cần cập nhật vị trí customer thì lisner chỗ nào
-        //.....
+        String name = getUser().getDisplayName();
+        String email = getUser().getEmail();
+        String vehicle = "81N1 - 12455";
+        int star = 5;
+        String phone = "0971096050";
+
+        DriverInfo driverInfo = new DriverInfo(name, email, vehicle, phone, star);
+
+
+        Map<String, Object> infoMap = driverInfo.toMap();
+        myRef2.updateChildren(infoMap);
+
+
     }
 
-    public static void registerDriverToFirebase(String driverId, String path, LatLng location) {
+
+    public static void registerDriverToFirebase(String path, LatLng location) {
+        String driverId = getUid();
         Log.d("xxx", "registerDriver: [id:" + driverId + "|Path: " + path + "|Loc: " + location.toString() + "]");
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
         setGeoFireLocation(ref, driverId, location);
+    }
+
+    public static void updateCustomerLocationToFirebase(LatLng loc) {
+        //Todo:xx
+
     }
 }
