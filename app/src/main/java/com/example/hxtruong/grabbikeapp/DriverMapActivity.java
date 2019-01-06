@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -17,6 +18,7 @@ import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -56,7 +58,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     int i = 0;
     private LatLng mLastLocation;
 
-    private Button btnPickup, btnReturn, btnFakeLoc ;
+    private Button btnPickup, btnPickDown, btnFakeLoc ;
     TextView tvPrice;
     private ProgressDialog progressDialog;
     private List<Polyline> polylinePaths;
@@ -75,10 +77,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         list = new ArrayList<>();
         myRoute = new ArrayList<>();
         btnPickup = findViewById(R.id.btnPickup);
-        btnReturn = findViewById(R.id.btnReturn);
+        btnPickDown = findViewById(R.id.btnPickDown);
         tvPrice = findViewById(R.id.txtPriceDriver);
         btnFakeLoc = findViewById(R.id.btnFakeLoc);
-
 
 
         btnFakeLoc.setOnClickListener(new View.OnClickListener() {
@@ -91,24 +92,36 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 i++;
                 if(i==list.size()-1)
                 {
-                    btnReturn.setEnabled(true);
+                    btnPickDown.setEnabled(true);
                     btnFakeLoc.setEnabled(false);
                 }
 
 
             }
         });
+
         btnPickup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 btnPickup.setEnabled(false);
             }
         });
-        btnReturn.setOnClickListener(new View.OnClickListener() {
+        btnPickDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 hideButtons(true);
                 hideRoutes();
+                final AlertDialog.Builder builder = new AlertDialog.Builder(DriverMapActivity.this);
+                builder.setTitle("Notification");
+                builder.setMessage("You have already completed the trip. Thank you!");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.show();
+
             }
         });
         polylinePaths = new ArrayList<>();
@@ -123,17 +136,17 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private void hideButtons(boolean flag){
         if(flag == true){
-            btnReturn.setVisibility(View.GONE);
+            btnPickDown.setVisibility(View.GONE);
             btnPickup.setVisibility(View.GONE);
             tvPrice.setVisibility(View.GONE);
 
         }
         else {
             btnPickup.setVisibility(View.VISIBLE);
-            btnReturn.setVisibility(View.VISIBLE);
+            btnPickDown.setVisibility(View.VISIBLE);
             tvPrice.setVisibility(View.VISIBLE);
         }
-        btnReturn.setEnabled(false);
+        btnPickDown.setEnabled(false);
     }
     /**
      * Manipulates the map once available.

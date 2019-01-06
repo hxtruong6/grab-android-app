@@ -35,7 +35,7 @@
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:layout_margin="5dp"
-           android:background="@drawable/panel_rounded_bg"
+           android:background="@color/white"
            android:padding="5dp"
            android:text="30000VND"
            android:textAlignment="center" />
@@ -53,16 +53,16 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:layout_weight="1"
-               android:text="Pick up"/>
+               android:text="Pick Up"/>
            <Button
                android:layout_margin="3dp"
                android:background="@drawable/panel_rounded_bg"
                android:textAllCaps="false"
-               android:id="@+id/btnReturn"
+               android:id="@+id/btnPickDown"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:layout_weight="1"
-               android:text="Return"/>
+               android:text="Pick Down"/>
        </LinearLayout>
    </LinearLayout>
 </FrameLayout>
