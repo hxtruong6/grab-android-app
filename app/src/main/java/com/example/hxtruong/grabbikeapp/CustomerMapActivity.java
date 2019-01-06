@@ -206,7 +206,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLastLocation, 18));
                 // TODO: update user location
 
-                showNearDriver();
+                //showNearDriver();
 
 
                 try{

@@ -7,6 +7,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.FirebaseDatabase;
 
 
+import java.util.List;
+
 import core.driver.Driver;
 import core.driver.DriverInfo;
 import core.helper.FirebaseHelper;
@@ -108,6 +110,10 @@ public class Customer {
     public DriverInfo getDriverInfo() {
         if (driverInfo != null && !driverInfo.isEmpty())
             return driverInfo;
+        return null;
+    }
+
+    public List<LatLng> getDriverList() {
         return null;
     }
 

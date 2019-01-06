@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
             @Override
             public void onClick(View v) {
                 Customer.getInstance().updateCustomerLocation(MyHelper.createRandomLocation());
+                Driver.getInstance().updateDriverLocation(MyHelper.createRandomLocation());
             }
         });
 

@@ -22,7 +22,7 @@ public class Driver {
     }
 
     public void initDriverData() {
-        mLastKnownLocation = new LatLng(1.2f, 2.3f);
+        mLastKnownLocation = new LatLng(10.234512f, 106.3872551f);
     }
 
     public void registerIDriverInterface(IDriverListener listener){

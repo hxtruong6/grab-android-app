@@ -133,7 +133,7 @@ public class FirebaseHelper {
         /*
          * Đặt reference tới workingDriver/driverUID/currentlocation
          */
-        DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverId).child("l");
+        DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverId).child("currLoc").child("l");
         assignedCustomerRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -171,8 +171,20 @@ public class FirebaseHelper {
     //Driver area
     public static void updateDriverLocationToFirebase(LatLng loc, String path) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference(path).child("anhtaixe001");
-        setGeoFireLocation(myRef, "curLoc", loc);
+        DatabaseReference myRef = database.getReference(path);
+
+        if(path.equals("driversWorking")){
+            setGeoFireLocation(myRef.child("anhtaixe001"),"currLoc", loc);
+        }
+        else//availableDriver
+        {
+            setGeoFireLocation(myRef, "anhtaixe001", loc);
+        }
+
+
+
+
+
     }
 
     public static void startListenCustomerRequest() {
@@ -285,7 +297,7 @@ public class FirebaseHelper {
 
     public static void registerDriverToFirebase(String driverId, String path, LatLng location) {
         Log.d("xxx", "registerDriver: [id:" + driverId + "|Path: " + path + "|Loc: " + location.toString() + "]");
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path).child(driverId);
-        setGeoFireLocation(ref, "curLoc", location);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
+        setGeoFireLocation(ref, driverId, location);
     }
 }
