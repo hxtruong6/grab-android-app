@@ -27,8 +27,7 @@ public class Driver {
 
     public void registerIDriverInterface(IDriverListener listener){
         mListener = listener;
-        // TODO: update available driver
-//        FirebaseHelper.registerDriverToFirebase(FirebaseHelper.getUser().getUid(), "driversAvailable", mLastKnownLocation);
+        FirebaseHelper.registerDriverToFirebase("anhtaixe001", "driversAvailable", mLastKnownLocation);
         FirebaseHelper.startListenCustomerRequest();
     }
 
