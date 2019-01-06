@@ -7,6 +7,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.FirebaseDatabase;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import core.driver.Driver;
 import core.driver.DriverInfo;
 import core.helper.FirebaseHelper;
@@ -34,7 +37,7 @@ public class Customer {
     }
 
     public void initCustomerData() {
-        mLastKnownLocation = new LatLng(10.12423, 106.9141291);
+        mLastKnownLocation = new LatLng(0, 0);
         mStartLocation = new LatLng(10.12423f, 106.9141291f);
         mEndLocation = new LatLng(10.1234647f, 106.945142f);
         mDriverLocation = new LatLng(10.0123, 106.999291);
@@ -109,6 +112,20 @@ public class Customer {
         if (driverInfo != null && !driverInfo.isEmpty())
             return driverInfo;
         return null;
+    }
+
+    public List<LatLng> getDriverList() {
+        //TODO: get available driver list from firebase
+
+        // Example:
+        List<LatLng> list = new ArrayList<>();
+        list.add(new LatLng(10.765455, 106.682078));
+        list.add(new LatLng(10.763276, 106.681475));
+        list.add(new LatLng(10.763218, 106.683428));
+        list.add(new LatLng(10.761902, 106.683055));
+        list.add(new LatLng(10.767548, 106.678859));
+        list.add(new LatLng(10.755547, 106.685260));
+        return list;
     }
 
     //Interface

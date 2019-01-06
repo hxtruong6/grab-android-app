@@ -1,10 +1,13 @@
 package com.example.hxtruong.grabbikeapp;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -25,6 +28,7 @@ import android.widget.TextView;
 
 import com.example.hxtruong.grabbikeapp.authentication.Authentication;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -46,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        searchingCurrentLocation();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -218,13 +222,13 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
 
     public void goToDriver(View view) {
 
-        Intent intent = new Intent(MainActivity.this, DriverMapActivity.class);
+        Intent intent = new Intent(MainActivity.this, WaitingLocationDriverActivity.class);
         startActivity(intent);
 
     }
 
     public void gotToCustomer(View view) {
-        Intent intent = new Intent(MainActivity.this, CustomerMapActivity.class);
+        Intent intent = new Intent(MainActivity.this, WaitingLocationActivity.class);
         startActivity(intent);
 
     }
@@ -302,6 +306,8 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
 
         } else if (id == R.id.nav_manage) {
 
+        }else if (id == R.id.nav_log_out) {
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -309,4 +315,49 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
         return true;
     }
 
+    private void searchingCurrentLocation() {
+        try {
+            LocationManager locationManager = (LocationManager)
+                    getSystemService(Context.LOCATION_SERVICE);
+            LocationListener locationListener = new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    Customer.getInstance().updateCustomerLocation(new LatLng(location.getLatitude(), location.getLongitude()));
+                    MyHelper.toast(getApplicationContext(), "Customer Location changed ON MAP!"+location.getLatitude()+", "+location.getLongitude());
+                    Log.d("xxx", "Customer location changed on map" + +location.getLatitude()+", "+location.getLongitude());
+
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+
+                }
+            };
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+
+        } catch (Exception e) {
+
+        }
+    }
 }

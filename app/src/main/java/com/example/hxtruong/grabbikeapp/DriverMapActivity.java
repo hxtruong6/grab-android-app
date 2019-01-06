@@ -38,14 +38,13 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private GoogleMap mMap;
 
-    private Double currentLatitude = 0.0;
-    private Double currentLongitude = 0.0;
+    private LatLng mLastLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_map);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -66,14 +65,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        //new GetCoordinates().execute();
-        /*ProgressDialog dialog = new ProgressDialog(DriverMapActivity.this);
-
-        dialog.setMessage("Searching your location....");
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();*/
-
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -100,18 +91,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             LocationListener locationListener = new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
-                    currentLatitude = location.getLatitude();
-                    currentLongitude = location.getLongitude();
 
-                    LatLng mDefaultLocation = new LatLng(currentLatitude, currentLongitude);
-
-                    mMap.addMarker(new MarkerOptions()
-                            .position(mDefaultLocation)
-                            .title("Your location!")
-                    );
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, 18));
-
-
+                    mLastLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLastLocation, 18));
                 }
 
                 @Override

@@ -48,11 +48,11 @@ import core.customer.Customer;
 import core.helper.FirebaseHelper;
 import core.helper.MyHelper;
 
-public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationSource.OnLocationChangedListener {
+public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback {
     private static final int CODE_ORIGIN = 4000;
     private static final int CODE_DESTINATION = 4001;
     private GoogleMap mMap;
-    private LatLng mLastLocation;// = new LatLng(10.762719, 106.682332);
+    private LatLng mLastLocation;
     private TextView originAddress;
 
     TextView tvOrigin, tvDestination;
@@ -96,8 +96,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         mMap = googleMap;
 
-        mLastLocation = new LatLng(10.763024, 106.682309);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLastLocation, 11));
+        LatLng defaultLocation = new LatLng(10.763024, 106.682309);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 11));
 
         setOriginAddressToTextView();
         //showNearDriver();
@@ -124,8 +124,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         List<LatLng> list = new ArrayList<>();
         for (int i=0; i<driverList.size(); i++)
         {
-            double a = Math.abs(mLastLocation.latitude - driverList.get(i).latitude);
-            double b = Math.abs(mLastLocation.longitude - driverList.get(i).longitude);
             if (Math.abs(mLastLocation.latitude - driverList.get(i).latitude) <= limitLatitude &&
                     Math.abs(mLastLocation.longitude - driverList.get(i).longitude) <= limitLongitude){
                 list.add(driverList.get(i));
@@ -137,7 +135,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     }
 
 
-    @Override
+   /* @Override
     public void onLocationChanged(Location location) {
         if (getApplicationContext() != null) {
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -147,7 +145,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
         }
-    }
+    }*/
 
     public void editOriginAndDestination(int requestCode) {
         Intent intent = new Intent(CustomerMapActivity.this, EditAddressActivity.class);
@@ -199,10 +197,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 MyHelper.toast(getApplicationContext(), "Customer Location changed ON MAP!"+location.getLatitude()+", "+location.getLongitude());
                 Log.d("xxx", "Customer location changed on map" + +location.getLatitude()+", "+location.getLongitude());
 
-                mMap.addMarker(new MarkerOptions()
-                        .position(mLastLocation)
-                        .title("Your location!")
-                );
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLastLocation, 18));
                 // TODO: update user location
 
