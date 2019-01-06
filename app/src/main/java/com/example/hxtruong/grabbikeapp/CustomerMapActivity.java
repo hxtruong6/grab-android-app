@@ -204,6 +204,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 Log.d("xxx", "Customer location changed on map" +location.getLatitude()+", "+location.getLongitude());
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLastLocation, 18));
+                Customer.getInstance().setStartLocation((float) mLastLocation.latitude, (float) mLastLocation.longitude);
                 // TODO: update user location
 
                 //showNearDriver();

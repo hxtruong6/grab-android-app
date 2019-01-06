@@ -19,6 +19,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -34,7 +35,8 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
     private GoogleMap mMap;
     private LatLng latLngStart;
     private LatLng latLngEnd;
-    private List<Polyline> polylinePaths;
+    public static List<Polyline> polylinePaths;
+    public static LatLngBounds bounds;
     private ProgressDialog progressDialog;
     private String parentActivity;
     private TextView txtPrice;
@@ -120,6 +122,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         progressDialog.dismiss();
         polylinePaths = new ArrayList<>();
         for (Route route : routes){
+            bounds = route.bounds;
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(route.bounds,200));
             Marker markerOrigin = mMap.addMarker(new MarkerOptions()
                     .position(route.startLocation)
@@ -139,6 +142,7 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
                 polylineOptions.add(route.points.get(i));
 
             polylinePaths.add(mMap.addPolyline(polylineOptions));
+//            mMap.addPolyline(polylineOptions);
 
             int price = 10000;
             if (route.distance.value > 2000){

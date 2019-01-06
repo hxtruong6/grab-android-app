@@ -1,6 +1,8 @@
 package com.example.hxtruong.grabbikeapp;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.hxtruong.grabbikeapp.route.ShowRouteActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -20,10 +23,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.util.List;
 
 import core.customer.Customer;
 import core.driver.DriverInfo;
-import core.helper.FirebaseHelper;
 import core.helper.MyHelper;
 
 public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMapReadyCallback, Customer.IUserListener {
@@ -33,8 +39,11 @@ public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMap
     private GoogleMap mMap;
     private LatLng posDriver;
     private AsyncUpdatePosition asyncUpdate;
+    private List<Polyline> newPolylinePaths;
+    private LatLng latLngStart, latLngEnd;
     private LatLng posCustomer;
     private boolean initZoom;
+    private ProgressDialog progressDialog;
 
 
     @Override
@@ -52,6 +61,7 @@ public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMap
         markerCustomer = null;
         markerDriver = null;
         initZoom = true;
+
         showDriverInfo();
 
     }
@@ -114,11 +124,12 @@ public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMap
         mMap = googleMap;
 
         //TODO: get position of Driver and Customer from Database
-        GetPositionFromDatase();
+        GetPositionFromDatabase();
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
                 if (initZoom) {
+                    showRoute();
                     ZoomMap();
                     initZoom = false;
                 }
@@ -126,12 +137,26 @@ public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMap
         });
         updateMarkerCustomer();
         updateMarkerDriver();
+        latLngStart = Customer.getInstance().mStartLocation;
+        latLngEnd = Customer.getInstance().mEndLocation;
+        Log.d("quoc", "lat: " + latLngStart.toString() + "| latEn:" + latLngEnd.toString());
+        String s = ShowRouteActivity.polylinePaths.get(0).getPoints().get(0).toString();
+        Log.d("Anhquoc",s);
+//        mMap.setOnCameraMoveStartedListener();
+//        new DirectionFinder(this, latLngStart, latLngEnd).execute();
+
     }
 
     private void ZoomMap() {
         Log.d("xxx", "posDriver" + posDriver.toString());
         Log.d("xxx", "posCustomer" + posCustomer.toString());
-        LatLngBounds bounds = CreateBounds(posDriver, posCustomer);
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(posCustomer);
+        builder.include(posDriver);
+        builder.include(Customer.getInstance().mStartLocation);
+        builder.include(Customer.getInstance().mEndLocation);
+//        LatLngBounds bounds = CreateBounds(posDriver, posCustomer);
+        LatLngBounds bounds = builder.build();
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
     }
 
@@ -144,9 +169,29 @@ public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMap
     }
 
 
-    private void GetPositionFromDatase() {
+    private void GetPositionFromDatabase() {
         posDriver = Customer.getInstance().mDriverLocation;
         posCustomer = Customer.getInstance().mLastKnownLocation;
+    }
+
+    public void showRoute() {
+        newPolylinePaths = ShowRouteActivity.polylinePaths;
+        Marker markerOrigin = mMap.addMarker(new MarkerOptions()
+                .position(Customer.getInstance().mStartLocation)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.icons_location_marker_red)));
+        Marker markerDestination = mMap.addMarker(new MarkerOptions()
+                .position(Customer.getInstance().mEndLocation)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.icons_location_marker_blue)));
+
+        markerDestination.showInfoWindow();
+        markerOrigin.showInfoWindow();
+        PolylineOptions polylineOptions = new PolylineOptions().
+                geodesic(true).
+                color(Color.BLUE).
+                width(10);
+        for(int i = 0; i < newPolylinePaths.get(0).getPoints().size(); i++)
+            polylineOptions.add(newPolylinePaths.get(0).getPoints().get(i));
+        mMap.addPolyline(polylineOptions);
     }
 
     class AsyncUpdatePosition extends AsyncTask<Void, Integer, Void> {
