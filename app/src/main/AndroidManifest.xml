@@ -33,8 +33,7 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".CustomerMapActivity">
-        </activity>
+        <activity android:name=".CustomerMapActivity"></activity>
         <activity android:name=".EditAddressActivity">
 
             <!--
@@ -54,8 +53,8 @@
             android:label="@string/title_activity_driver_map" />
         <activity
             android:name=".UpdateMapRealtimeActivity"
-            android:label="@string/title_activity_update_map_realtime"></activity>
-
+            android:label="@string/title_activity_update_map_realtime" />
+        <activity android:name=".FinishTripActivity"></activity>
     </application>
 
 </manifest>

@@ -15,6 +15,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -33,6 +34,7 @@ public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMap
     private LatLng posDriver;
     private AsyncUpdatePosition asyncUpdate;
     private LatLng posCustomer;
+    private boolean initZoom;
 
 
     @Override
@@ -49,6 +51,7 @@ public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMap
 
         markerCustomer = null;
         markerDriver = null;
+        initZoom = true;
         showDriverInfo();
     }
 
@@ -113,7 +116,15 @@ public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMap
 
         //TODO: get position of Driver and Customer from Database
         GetPositionFromDatase();
-        //ZoomMap();
+        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+                if (initZoom) {
+                    ZoomMap();
+                    initZoom = false;
+                }
+            }
+        });
         updateMarkerCustomer();
         updateMarkerDriver();
     }
@@ -126,13 +137,10 @@ public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMap
     }
 
     private LatLngBounds CreateBounds(LatLng p1, LatLng p2) {
-        LatLngBounds bounds = null;
-        double minLat, minLng, maxLat, maxLng;
-        minLat = Math.min(p1.latitude, p2.latitude);
-        maxLat = Math.max(p1.latitude, p2.latitude);
-        minLng = Math.min(p1.longitude, p2.longitude);
-        maxLng = Math.max(p1.longitude, p2.longitude);
-        bounds = new LatLngBounds(new LatLng(minLat, minLng), new LatLng(maxLat, maxLng));
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(p1);
+        builder.include(p2);
+        LatLngBounds bounds = builder.build();
         return bounds;
     }
 
