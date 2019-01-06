@@ -20,21 +20,24 @@
        android:layout_height="wrap_content"
        android:orientation="vertical">
        <Button
+           android:id="@+id/btnFakeLoc"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:textAllCaps="false"
            android:layout_margin="5dp"
-           android:background="@color/transparent"
-           />
-       <TextView
-           android:layout_margin="5dp"
-           android:padding="5dp"
-           android:textAlignment="center"
+           android:text="fake gps"
            android:background="@color/white"
+           />
+
+       <TextView
+           android:id="@+id/txtPriceDriver"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:id="@+id/txtPriceDriver"
-           android:text="30000VND"/>
+           android:layout_margin="5dp"
+           android:background="@color/white"
+           android:padding="5dp"
+           android:text="30000VND"
+           android:textAlignment="center" />
        <LinearLayout
            android:layout_margin="5dp"
            android:layout_width="match_parent"
@@ -49,7 +52,7 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:layout_weight="1"
-               android:text="Donkhac"/>
+               android:text="Pick up"/>
            <Button
                android:layout_margin="3dp"
                android:background="@color/yellow"
@@ -58,7 +61,7 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:layout_weight="1"
-               android:text="trakach"/>
+               android:text="Return"/>
        </LinearLayout>
    </LinearLayout>
 </FrameLayout>

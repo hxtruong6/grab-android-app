@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -50,15 +51,16 @@ import core.helper.MyHelper;
 public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, Driver.IDriverListener, DirectionFinderListener {
 
     private GoogleMap mMap;
-
+    int i = 0;
     private LatLng mLastLocation;
 
-    private Button btnPickup, btnReturn;
+    private Button btnPickup, btnReturn, btnFakeLoc ;
+    TextView tvPrice;
     private ProgressDialog progressDialog;
     private List<Polyline> polylinePaths;
     private LatLng latLngStart, latLngEnd;
     Boolean statLocReady, endLocReady;
-
+    List<LatLng> list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,9 +69,29 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
+        list = new ArrayList<>();
         btnPickup = findViewById(R.id.btnPickup);
         btnReturn = findViewById(R.id.btnReturn);
+        tvPrice = findViewById(R.id.txtPriceDriver);
+        btnFakeLoc = findViewById(R.id.btnFakeLoc);
+
+        btnFakeLoc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLastLocation = list.get(i);
+
+                Driver.getInstance().updateDriverLocation(mLastLocation);
+                showBikeMarker();
+                i++;
+                if(i==list.size()-1)
+                {
+                    btnReturn.setEnabled(true);
+                    btnFakeLoc.setEnabled(false);
+                }
+
+
+            }
+        });
         btnPickup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +107,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         });
         polylinePaths = new ArrayList<>();
         statLocReady = endLocReady = false;
-        hideButtons(false);
+        hideButtons(true);
 
     }
 
@@ -97,11 +119,15 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         if(flag == true){
             btnReturn.setVisibility(View.GONE);
             btnPickup.setVisibility(View.GONE);
+            tvPrice.setVisibility(View.GONE);
+
         }
         else {
             btnPickup.setVisibility(View.VISIBLE);
             btnReturn.setVisibility(View.VISIBLE);
+            tvPrice.setVisibility(View.VISIBLE);
         }
+        btnReturn.setEnabled(false);
     }
     /**
      * Manipulates the map once available.
@@ -136,7 +162,13 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         new DirectionFinder(this, latLngStart, latLngEnd).execute();
     }
 
+    private void showBikeMarker()
+    {
+//        mMap.clear();
+        MarkerOptions markerOptions = new MarkerOptions().position(mLastLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_biker_15x43));
+        mMap.addMarker(markerOptions);
 
+    }
     private void setOriginAddressToTextView() {
         try {
             LocationManager locationManager = (LocationManager)
@@ -145,6 +177,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 @Override
                 public void onLocationChanged(Location location) {
                     mLastLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                    //Driver.getInstance().updateDriverLocation(mLastLocation);
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLastLocation, 18));
                 }
 
@@ -193,6 +226,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
        FirebaseHelper.getCustomerLocation(customerRequestId, "startLoc");
        FirebaseHelper.getCustomerLocation(customerRequestId, "endLoc");
 
+
+
     }
 
     @Override
@@ -201,7 +236,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         statLocReady = true;
         if(statLocReady && endLocReady){
             ShowRoute();
-            hideButtons(true);
+            hideButtons(false);
         }
 
     }
@@ -212,7 +247,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         endLocReady = true;
         if(statLocReady && endLocReady){
             ShowRoute();
-            hideButtons(true);
+            hideButtons(false);
         }
     }
 
@@ -232,6 +267,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     public void onDirectionFinderSuccess(List<Route> routes) {
 
         progressDialog.dismiss();
+        showBikeMarker();
         polylinePaths = new ArrayList<>();
         for (Route route : routes){
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(route.bounds,200));
@@ -251,9 +287,11 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     geodesic(true).
                     color(Color.BLUE).
                     width(10);
-            for(int i = 0; i < route.points.size(); i++)
+            for(int i = 0; i < route.points.size(); i++) {
                 polylineOptions.add(route.points.get(i));
-
+                list.add(route.points.get(i));
+                Log.d("ccc", i+" - "+route.points.get(i).toString());
+            }
             polylinePaths.add(mMap.addPolyline(polylineOptions));
 
             int price = 10000;

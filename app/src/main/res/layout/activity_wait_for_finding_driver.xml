@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".WaitingForFindingDriver.WaitForFindingDriver"
     android:orientation="vertical"
-    android:background="#9e6">
+    android:background="@drawable/side_editadress_background">
 
     <TextView
         android:id="@+id/txtAnimation"
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:textSize="40dp"
         android:textAlignment="center"
-        android:textColor="#fff"
+        android:textColor="@color/white"
         android:textStyle="bold"/>
 
     <TextView
