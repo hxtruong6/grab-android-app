@@ -114,6 +114,9 @@ public class Customer {
     }
 
     public List<LatLng> getDriverList() {
+        Log.d("xxx", "start get list driver");
+        FirebaseHelper.getDriverLocationList();
+        Log.d("xxx", "end get list driver");
         return null;
     }
 
@@ -123,5 +126,9 @@ public class Customer {
         void onDriverLocationChanged(LatLng location);
         void onBookingResult(String driver);
         void onDriverInfoReady();
+    }
+
+    public interface IFirebaseHelperCallBack {
+        void onGetListAvailableDriversCallBack();
     }
 }

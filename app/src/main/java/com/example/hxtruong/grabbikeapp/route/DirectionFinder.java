@@ -20,6 +20,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import core.driver.Driver;
+
 public class DirectionFinder {
 
     private static final String DIRECTION_URL_API = "https://maps.googleapis.com/maps/api/directions/json?";
@@ -129,6 +131,8 @@ public class DirectionFinder {
             route.startLocation = new LatLng(jsonStartLocation.getDouble("lat"), jsonStartLocation.getDouble("lng"));
             route.endLocation = new LatLng(jsonEndLocation.getDouble("lat"), jsonEndLocation.getDouble("lng"));
             route.points = decodePolyLine(overview_polylineJson.getString("points"));
+
+            Driver.getInstance().routePoints = route.points;
 
             routes.add(route);
         }

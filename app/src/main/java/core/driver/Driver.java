@@ -4,11 +4,15 @@ import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.List;
+
 import core.helper.FirebaseHelper;
 import core.helper.MyHelper;
 
 public class Driver {
     private static final Driver ourInstance = new Driver();
+    public List<LatLng> routePoints;
+
     public static Driver getInstance() {
         return ourInstance;
     }

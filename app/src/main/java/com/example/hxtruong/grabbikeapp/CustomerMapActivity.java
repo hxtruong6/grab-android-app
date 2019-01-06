@@ -84,6 +84,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
+
+        // DELETE IT
+        Customer.getInstance().getDriverList();
+
      /*   // TODO: delete later
         Intent intent = new Intent(CustomerMapActivity.this, ShowRouteActivity.class);
         intent.putExtra("ID", "CUSTOMERMAP");

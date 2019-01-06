@@ -183,6 +183,27 @@ public class FirebaseHelper {
 
     }
 
+    public static void getDriverLocationList() {
+        DatabaseReference availableDriversRef = FirebaseDatabase.getInstance().getReference().child("driversAvailable");
+        Log.d("xxx", "get 1_ list driver");
+
+        availableDriversRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Log.d("xxx", "get 2_ list driver");
+                    Object driverIdList = dataSnapshot.getValue();
+                    Log.d("xxx", "list driver:" + dataSnapshot.getValue().toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public static void startListenCustomerRequest() {
         final String driverId = FirebaseHelper.getUid();
         final DatabaseReference driversAvailableRef = FirebaseDatabase.getInstance().getReference("driversAvailable").child(driverId);
