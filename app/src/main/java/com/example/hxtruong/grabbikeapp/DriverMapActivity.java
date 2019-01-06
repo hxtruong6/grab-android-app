@@ -49,8 +49,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        Driver.getInstance().registerIDriverInterface(this);
-
     }
 
 
@@ -67,12 +65,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        //new GetCoordinates().execute();
-        /*ProgressDialog dialog = new ProgressDialog(DriverMapActivity.this);
-
-        dialog.setMessage("Searching your location....");
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();*/
+        LatLng defaultLocation = new LatLng(10.763024, 106.682309);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 11));
 
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -89,7 +83,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
         setOriginAddressToTextView();
 
-
+        Driver.getInstance().registerIDriverInterface(this);
     }
 
 
@@ -105,10 +99,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                     LatLng mDefaultLocation = new LatLng(currentLatitude, currentLongitude);
 
-                    mMap.addMarker(new MarkerOptions()
-                            .position(mDefaultLocation)
-                            .title("Your location!")
-                    );
+
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, 18));
 
 

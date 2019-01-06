@@ -1,15 +1,12 @@
 package core.customer;
 
-import android.location.Location;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.database.FirebaseDatabase;
 
 
 import java.util.List;
 
-import core.driver.Driver;
 import core.driver.DriverInfo;
 import core.helper.FirebaseHelper;
 
@@ -24,6 +21,9 @@ public class Customer {
     private IUserListener mListener;
     Boolean isBooking = false;
 
+    public Boolean customerReady = false;
+    public Boolean driverLocationReady = false;
+
     public String driverId;
     public LatLng mLastKnownLocation; //tracking gps
     public LatLng mDriverLocation;
@@ -36,15 +36,15 @@ public class Customer {
     }
 
     public void initCustomerData() {
-        mLastKnownLocation = new LatLng(10.12423, 106.9141291);
-        mStartLocation = new LatLng(10.12423f, 106.9141291f);
-        mEndLocation = new LatLng(10.1234647f, 106.945142f);
-        mDriverLocation = new LatLng(10.0123, 106.999291);
+        mLastKnownLocation = new LatLng(0,0);//10.12423, 106.9141291);
+        mStartLocation = new LatLng(0,0);//10.12423f, 106.9141291f);
+        mEndLocation = new LatLng(0,0);//10.1234647f, 106.945142f);
+        mDriverLocation = new LatLng(0,0);//10.0123, 106.999291);
     }
 
     public void registerIUserInterface(IUserListener listener) {
         mListener = listener;
-        FirebaseHelper.registerCustomerToFirebase();
+        FirebaseHelper.registerCustomerInfoToFirebase();
     }
 
     // Truong
@@ -73,6 +73,8 @@ public class Customer {
 
     public void updateCustomerLocation(LatLng loc) {
         mLastKnownLocation = loc;
+        driverLocationReady = true;
+
         if (isBooking)
             FirebaseHelper.updateCustomerLocationToFirebase(loc);
 

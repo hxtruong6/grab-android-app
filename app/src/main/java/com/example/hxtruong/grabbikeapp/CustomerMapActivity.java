@@ -100,8 +100,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         mMap = googleMap;
 
-        mLastLocation = new LatLng(10.763024, 106.682309);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLastLocation, 11));
+        LatLng defaultLocation = new LatLng(10.763024, 106.682309);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 11));
 
         setOriginAddressToTextView();
         //showNearDriver();
@@ -146,7 +146,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         if (getApplicationContext() != null) {
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             mLastLocation = latLng;
-            Customer.getInstance().mLastKnownLocation = latLng;
+            Customer.getInstance().updateCustomerLocation(new LatLng(location.getLatitude(), location.getLongitude()));
+            MyHelper.toast(getApplicationContext(), "Customer Location changed ON MAP!"+location.getLatitude()+", "+location.getLongitude());
+            Log.d("xxx", "Customer location changed on map" +location.getLatitude()+", "+location.getLongitude());
             Log.d("xxx", "On location changed: on map " + latLng.toString());
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
@@ -201,7 +203,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                 Customer.getInstance().updateCustomerLocation(new LatLng(location.getLatitude(), location.getLongitude()));
                 MyHelper.toast(getApplicationContext(), "Customer Location changed ON MAP!"+location.getLatitude()+", "+location.getLongitude());
-                Log.d("xxx", "Customer location changed on map" + +location.getLatitude()+", "+location.getLongitude());
+                Log.d("xxx", "Customer location changed on map" +location.getLatitude()+", "+location.getLongitude());
 
                 mMap.addMarker(new MarkerOptions()
                         .position(mLastLocation)

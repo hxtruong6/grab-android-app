@@ -17,8 +17,8 @@ import core.driver.Driver;
 public class GpsServices extends Service {
     private static final String TAG = "GPS Service";
     private LocationManager mLocationManager = null;
-    private static final int LOCATION_INTERVAL = 60000;     // in millisecond
-    private static final float LOCATION_DISTANCE = 0.3f;   //1 metter
+    private static final int LOCATION_INTERVAL = 6000;     // in millisecond
+    private static final float LOCATION_DISTANCE = 0.1f;   //1 metter
 
     private class LocationListener implements android.location.LocationListener
     {

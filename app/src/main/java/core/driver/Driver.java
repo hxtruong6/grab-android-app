@@ -26,12 +26,13 @@ public class Driver {
     }
 
     public void initDriverData() {
-        mLastKnownLocation = new LatLng(10.234512f, 106.3872551f);
+        mLastKnownLocation = new LatLng(0,0);//10.234512f, 106.3872551f);
     }
 
     public void registerIDriverInterface(IDriverListener listener){
         mListener = listener;
-        FirebaseHelper.registerDriverToFirebase(FirebaseHelper.getUser().getUid(), "driversAvailable", mLastKnownLocation);
+        FirebaseHelper.registerDriverInfoToFirebase();
+        FirebaseHelper.registerDriverToFirebase( "driversAvailable", mLastKnownLocation);
         FirebaseHelper.startListenCustomerRequest();
     }
 
