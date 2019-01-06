@@ -27,7 +27,7 @@ public class Driver {
 
     public void registerIDriverInterface(IDriverListener listener){
         mListener = listener;
-        FirebaseHelper.registerDriverToFirebase("anhtaixe001", "driversAvailable", mLastKnownLocation);
+        FirebaseHelper.registerDriverToFirebase(FirebaseHelper.getUser().getUid(), "driversAvailable", mLastKnownLocation);
         FirebaseHelper.startListenCustomerRequest();
     }
 

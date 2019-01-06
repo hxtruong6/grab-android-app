@@ -172,23 +172,19 @@ public class FirebaseHelper {
     public static void updateDriverLocationToFirebase(LatLng loc, String path) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference(path);
-
-        if(path.equals("driversWorking")){
-            setGeoFireLocation(myRef.child("anhtaixe001"),"currLoc", loc);
-        }
-        else//availableDriver
+        String driverId = FirebaseHelper.getUid();
+        if (path.equals("driversWorking")) {
+            setGeoFireLocation(myRef.child(driverId), "currLoc", loc);
+        } else//availableDriver
         {
-            setGeoFireLocation(myRef, "anhtaixe001", loc);
+            setGeoFireLocation(myRef, driverId, loc);
         }
-
-
-
 
 
     }
 
     public static void startListenCustomerRequest() {
-        final String driverId = "anhtaixe001";
+        final String driverId = FirebaseHelper.getUid();
         final DatabaseReference driversAvailableRef = FirebaseDatabase.getInstance().getReference("driversAvailable").child(driverId);
 
         driversAvailableRef.child("customerRequestId").addValueEventListener(new ValueEventListener() {
