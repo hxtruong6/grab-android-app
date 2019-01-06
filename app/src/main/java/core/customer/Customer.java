@@ -49,7 +49,7 @@ public class Customer {
     public void sendBookingRequest() {
         //Booking booking = new Booking(mStartLocation, mEndLocation);
         // TODO: send the booking later. Just simple for now
-        FirebaseHelper.sendBookingLocation(mStartLocation, mEndLocation);
+        FirebaseHelper.sendBookingLocation(mStartLocation, mEndLocation, mLastKnownLocation);
         FirebaseHelper.receiveBookingResultFromFirebase();
     }
 
