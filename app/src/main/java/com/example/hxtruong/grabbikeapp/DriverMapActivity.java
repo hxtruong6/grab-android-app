@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -12,6 +13,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -20,7 +22,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.hxtruong.grabbikeapp.route.DirectionFinder;
 import com.example.hxtruong.grabbikeapp.route.DirectionFinderListener;
 import com.example.hxtruong.grabbikeapp.route.Route;
@@ -44,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import core.customer.Customer;
 import core.driver.Driver;
 import core.helper.FirebaseHelper;
 import core.helper.MyHelper;
@@ -61,6 +63,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private LatLng latLngStart, latLngEnd;
     Boolean statLocReady, endLocReady;
     List<LatLng> list;
+    List<Route> myRoute;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,10 +73,13 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         list = new ArrayList<>();
+        myRoute = new ArrayList<>();
         btnPickup = findViewById(R.id.btnPickup);
         btnReturn = findViewById(R.id.btnReturn);
         tvPrice = findViewById(R.id.txtPriceDriver);
         btnFakeLoc = findViewById(R.id.btnFakeLoc);
+
+
 
         btnFakeLoc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,11 +170,32 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private void showBikeMarker()
     {
-//        mMap.clear();
+        mMap.clear();
         MarkerOptions markerOptions = new MarkerOptions().position(mLastLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_biker_15x43));
         mMap.addMarker(markerOptions);
 
+        Marker markerOrigin = mMap.addMarker(new MarkerOptions()
+                .position(myRoute.get(0).startLocation)
+                .title(myRoute.get(0).startAddress.split(",")[0])
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.icons_location_marker_red)));
+        Marker markerDestination = mMap.addMarker(new MarkerOptions()
+                .position(myRoute.get(0).endLocation)
+                .title(myRoute.get(0).endAddress.split(",")[0])
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.icons_location_marker_blue)));
+
+        PolylineOptions polylineOptions = new PolylineOptions().
+                geodesic(true).
+                color(Color.GREEN).
+                width(10);
+        for(int i = 0; i < myRoute.get(0).points.size(); i++) {
+            polylineOptions.add(myRoute.get(0).points.get(i));
+        }
+        polylinePaths.add(mMap.addPolyline(polylineOptions));
+
+
     }
+
+
     private void setOriginAddressToTextView() {
         try {
             LocationManager locationManager = (LocationManager)
@@ -266,6 +293,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onDirectionFinderSuccess(List<Route> routes) {
 
+        myRoute =routes;
         progressDialog.dismiss();
         showBikeMarker();
         polylinePaths = new ArrayList<>();

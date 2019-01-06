@@ -1,60 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MainActivity"
-    android:orientation="vertical"
-    tools:showIn="@layout/app_bar_main">
+    android:background="@drawable/side_editadress_background"
+    >
 
     <Button
 
         android:id="@+id/driver"
+        android:background="@drawable/panel_rounded_bg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="92dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
         android:onClick="goToDriver"
         android:text="I'm a Driver"
-        />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.348" />
 
     <Button
         android:id="@+id/customer"
+        android:background="@drawable/panel_rounded_bg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="I'm a Customer"
-        android:onClick="gotToCustomer"
-        />
-
-    <Button
-        android:id="@+id/btnBook"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Book"
-        />
-
-    <Button
-        android:id="@+id/btnChangeCustomerLoction"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Change Customer Location"
-        />
-
-    <Button
-        android:id="@+id/btnReceiveBook"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Receive Book"
-        />
-
-    <TextView
-        android:id="@+id/tvDebug"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-
+        android:layout_height="92dp"
         android:layout_marginBottom="8dp"
-        android:text="Debug Message"
-        />
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:onClick="gotToCustomer"
+        android:text="I'm a Customer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
 
-</LinearLayout>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.568" />
+
+
+
+
+</android.support.constraint.ConstraintLayout>
+
+
