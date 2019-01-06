@@ -14,8 +14,10 @@ public final class Definition {
     public static final int REQUEST_LOGIN = 3006;
     public static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 3007;
     public static final int RESULT_CODE_RETURN_ADDRESS = 3008;
+    public static final int REQUEST_PERMISSION_CODE = 3009;
 
     public static String[] PERMISSIONS = {
-            Manifest.permission.ACCESS_FINE_LOCATION
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.INTERNET
     };
 }

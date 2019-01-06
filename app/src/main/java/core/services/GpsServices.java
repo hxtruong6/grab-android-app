@@ -33,7 +33,7 @@ public class GpsServices extends Service {
         @Override
         public void onLocationChanged(Location location)
         {
-            Log.e(TAG, "onLocationChanged: " + location);
+            Log.d("xxx", "Location changed on Service " + location.getLatitude()+", "+location.getLongitude());
             mLastLocation.set(location);
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             Customer.getInstance().updateCustomerLocation(latLng);

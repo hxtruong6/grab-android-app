@@ -33,7 +33,6 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".BookingActivity" />
         <activity android:name=".CustomerMapActivity">
         </activity>
         <activity android:name=".EditAddressActivity">

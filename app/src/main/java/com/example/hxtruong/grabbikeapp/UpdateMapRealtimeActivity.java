@@ -113,12 +113,14 @@ public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMap
 
         //TODO: get position of Driver and Customer from Database
         GetPositionFromDatase();
-        ZoomMap();
+        //ZoomMap();
         updateMarkerCustomer();
         updateMarkerDriver();
     }
 
     private void ZoomMap() {
+        Log.d("xxx", "posDriver"+posDriver.toString());
+        Log.d("xxx", "posCustomer"+posCustomer.toString());
         LatLngBounds bounds = CreateBounds(posDriver, posCustomer);
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
     }

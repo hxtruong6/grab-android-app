@@ -1,14 +1,19 @@
 package com.example.hxtruong.grabbikeapp;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -28,6 +33,9 @@ import core.customer.Customer;
 import core.driver.Driver;
 import core.helper.FirebaseHelper;
 import core.helper.MyHelper;
+import core.services.GpsServices;
+
+import static core.Definition.PERMISSIONS;
 
 public class MainActivity extends AppCompatActivity implements Customer.IUserListener, NavigationView.OnNavigationItemSelectedListener {
     public FirebaseAuth mAuth;
@@ -88,11 +96,11 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
                 Driver.getInstance().updateDriverLocation(MyHelper.createRandomLocation());
             }
         });
+    }
 
-
-
-
-
+    private void startGpsService() {
+        Intent gpsService = new Intent(MainActivity.this, GpsServices.class);
+        MainActivity.this.startService(gpsService);
     }
 
     @Override
@@ -103,9 +111,60 @@ public class MainActivity extends AppCompatActivity implements Customer.IUserLis
         }
         else {
             Customer.getInstance().registerIUserInterface(this);
+            checkAllPermissions();
             updateUI();
         }
     }
+
+    private void checkAllPermissions() {
+        if (!MyHelper.hasSMSPermissions(this, Definition.PERMISSIONS)) {
+            showRequestPermissionsInfoAlertDialog();
+        }
+    }
+
+    private void showRequestPermissionsInfoAlertDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Permission Request");
+        builder.setMessage("Turn the GPS on to use the app");
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                requestMyPermissions();
+            }
+        });
+        builder.show();
+    }
+
+    private void requestMyPermissions() {
+        if (
+                ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.INTERNET)
+                        && ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                )
+            return;
+        ActivityCompat.requestPermissions(this, PERMISSIONS, Definition.REQUEST_PERMISSION_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode)
+        {
+            case Definition.REQUEST_PERMISSION_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    MyHelper.toast(this, "Permissions Granted!");
+                    startGpsService();
+                } else
+                {
+                    MyHelper.toast(this, "Permissions Denied!");
+                }
+            }
+        }
+
+    }
+
 
     private void updateUI() {
 

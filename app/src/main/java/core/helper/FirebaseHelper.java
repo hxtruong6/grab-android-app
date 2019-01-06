@@ -139,8 +139,8 @@ public class FirebaseHelper {
         assignedCustomerRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("xxx UpdateDriverLoc", dataSnapshot.toString());
                 if (dataSnapshot.exists()) {
+                    Log.d("xxx UpdateDriverLoc", dataSnapshot.toString());
                     List<Object> map = (List<Object>) dataSnapshot.getValue();
                     double locationLat = 0;
                     double locationLng = 0;

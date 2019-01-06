@@ -34,9 +34,9 @@ public class Customer {
     }
 
     public void initCustomerData() {
-        mLastKnownLocation = new LatLng(1.2f, 2.3f);
-        mStartLocation = new LatLng(2.0f, 10.2f);
-        mEndLocation = new LatLng(2.2f, .9f);
+        mLastKnownLocation = new LatLng(10.12423, 106.9141291);
+        mStartLocation = new LatLng(10.12423f, 106.9141291f);
+        mEndLocation = new LatLng(10.1234647f, 106.945142f);
         mDriverLocation = new LatLng(10.0123, 106.999291);
     }
 

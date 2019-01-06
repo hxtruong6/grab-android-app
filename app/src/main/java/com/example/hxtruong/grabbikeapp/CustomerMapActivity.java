@@ -44,18 +44,16 @@ import java.util.Locale;
 
 import core.customer.Customer;
 import core.helper.FirebaseHelper;
+import core.helper.MyHelper;
 
-public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationSource.OnLocationChangedListener, Customer.IUserListener {
+public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationSource.OnLocationChangedListener{
     private static final int CODE_ORIGIN = 4000;
     private static final int CODE_DESTINATION = 4001;
     private GoogleMap mMap;
     private LatLng mLastLocation;
     private TextView originAddress;
-    private Double currentLatitude = 10.763261;
-    private Double currentLongitude = 106.682215;
 
     TextView tvOrigin, tvDestination;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +64,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.customerMap);
         mapFragment.getMapAsync(this);
-        Customer.getInstance().registerIUserInterface(this);
+
         tvOrigin = findViewById(R.id.tvOrigin);
         tvDestination = findViewById(R.id.tvDestination);
         tvOrigin.setOnClickListener(new View.OnClickListener() {
@@ -108,32 +106,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     public void onLocationChanged(Location location) {
         if (getApplicationContext() != null) {
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-             mLastLocation = latLng;
-            Log.d("xcustomer", "On location changed: " + latLng.toString());
+            mLastLocation = latLng;
+            Customer.getInstance().mLastKnownLocation = latLng;
+            Log.d("xxx", "On location changed: on map " + latLng.toString());
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
         }
-    }
-
-    @Override
-    public void onCustomerLocationChanged(LatLng location) {
-        //
-    }
-
-    @Override
-    public void onDriverLocationChanged(LatLng location) {
-
-    }
-
-    @Override
-    public void onBookingResult(String driver) {
-
-        //String string = FirebaseHelper.getDriverInfo(driver);
-    }
-
-    @Override
-    public void onDriverInfoReady() {
-
     }
 
     public void editOriginAndDestination(int requestCode) {
@@ -179,15 +157,18 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onLocationChanged(Location location) {
                 originAddress = (TextView)findViewById(R.id.tvOrigin);
-                currentLatitude = location.getLatitude();
-                currentLongitude = location.getLongitude();
 
-                LatLng mDefaultLocation = new LatLng(currentLatitude, currentLongitude);
+                mLastLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+                Customer.getInstance().updateCustomerLocation(new LatLng(location.getLatitude(), location.getLongitude()));
+                MyHelper.toast(getApplicationContext(), "Customer Location changed ON MAP!"+location.getLatitude()+", "+location.getLongitude());
+                Log.d("xxx", "Customer location changed on map" + +location.getLatitude()+", "+location.getLongitude());
+
                 mMap.addMarker(new MarkerOptions()
-                        .position(mDefaultLocation)
+                        .position(mLastLocation)
                         .title("Your location!")
                 );
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, 18));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLastLocation, 18));
                 // TODO: update user location
 
                 try{
