@@ -31,6 +31,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -39,6 +40,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,15 +48,17 @@ import core.customer.Customer;
 import core.helper.FirebaseHelper;
 import core.helper.MyHelper;
 
-public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationSource.OnLocationChangedListener{
+public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationSource.OnLocationChangedListener {
     private static final int CODE_ORIGIN = 4000;
     private static final int CODE_DESTINATION = 4001;
     private GoogleMap mMap;
-    private LatLng mLastLocation;
+    private LatLng mLastLocation;// = new LatLng(10.762719, 106.682332);
     private TextView originAddress;
 
     TextView tvOrigin, tvDestination;
 
+    private static final double limitLatitude  = 0.002736;
+    private static final double limitLongitude  = 0.003334;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,10 +84,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
-        // TODO: delete later
+     /*   // TODO: delete later
         Intent intent = new Intent(CustomerMapActivity.this, ShowRouteActivity.class);
         intent.putExtra("ID", "CUSTOMERMAP");
-        startActivity(intent);
+        startActivity(intent);*/
     }
 
 
@@ -92,13 +96,44 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         mMap = googleMap;
 
-        setOriginAddressToTextView();
+        mLastLocation = new LatLng(10.763024, 106.682309);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLastLocation, 11));
 
+        setOriginAddressToTextView();
+        //showNearDriver();
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         mMap.setMyLocationEnabled(true);
+    }
+
+    private void showNearDriver() {
+        List<LatLng> driverList = Customer.getInstance().getDriverList();
+        List<LatLng> nearDriverList = findNearDriver(driverList);
+        for (int i=0; i<nearDriverList.size(); i++){
+            MarkerOptions driverMarker = new MarkerOptions()
+                    .position(nearDriverList.get(i)).title("Driver Location!");
+            driverMarker.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_biker_15x43));
+            mMap.addMarker(driverMarker);
+        }
+
+    }
+
+    private List<LatLng> findNearDriver(List<LatLng> driverList) {
+        List<LatLng> list = new ArrayList<>();
+        for (int i=0; i<driverList.size(); i++)
+        {
+            double a = Math.abs(mLastLocation.latitude - driverList.get(i).latitude);
+            double b = Math.abs(mLastLocation.longitude - driverList.get(i).longitude);
+            if (Math.abs(mLastLocation.latitude - driverList.get(i).latitude) <= limitLatitude &&
+                    Math.abs(mLastLocation.longitude - driverList.get(i).longitude) <= limitLongitude){
+                list.add(driverList.get(i));
+            }
+
+
+        }
+        return list;
     }
 
 
@@ -170,6 +205,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 );
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLastLocation, 18));
                 // TODO: update user location
+
+                showNearDriver();
+
 
                 try{
                     Geocoder geo = new Geocoder(CustomerMapActivity.this.getApplicationContext(), Locale.getDefault());
