@@ -199,7 +199,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                 mLastLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
-                Customer.getInstance().updateCustomerLocation(new LatLng(location.getLatitude(), location.getLongitude()));
+                //Customer.getInstance().updateCustomerLocation(new LatLng(location.getLatitude(), location.getLongitude()));
                 MyHelper.toast(getApplicationContext(), "Customer Location changed ON MAP!"+location.getLatitude()+", "+location.getLongitude());
                 Log.d("xxx", "Customer location changed on map" +location.getLatitude()+", "+location.getLongitude());
 

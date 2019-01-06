@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -14,31 +15,49 @@ import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.hxtruong.grabbikeapp.route.DirectionFinder;
+import com.example.hxtruong.grabbikeapp.route.DirectionFinderListener;
+import com.example.hxtruong.grabbikeapp.route.Route;
+import com.google.android.gms.common.internal.FallbackServiceBroker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import core.driver.Driver;
+import core.helper.FirebaseHelper;
 import core.helper.MyHelper;
 
-public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, Driver.IDriverListener {
+public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, Driver.IDriverListener, DirectionFinderListener {
 
     private GoogleMap mMap;
 
     private LatLng mLastLocation;
+
+    private Button btnPickup, btnReturn;
+    private ProgressDialog progressDialog;
+    private List<Polyline> polylinePaths;
+    private LatLng latLngStart, latLngEnd;
+    Boolean statLocReady, endLocReady;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +67,42 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        btnPickup = findViewById(R.id.btnPickup);
+        btnReturn = findViewById(R.id.btnReturn);
+        btnPickup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnPickup.setEnabled(false);
+            }
+        });
+        btnReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideButtons(true);
+                hideRoutes();
+            }
+        });
+        polylinePaths = new ArrayList<>();
+        statLocReady = endLocReady = false;
+        hideButtons(false);
+
     }
 
+    private void hideRoutes() {
 
+    }
+
+    private void hideButtons(boolean flag){
+        if(flag == true){
+            btnReturn.setVisibility(View.GONE);
+            btnPickup.setVisibility(View.GONE);
+        }
+        else {
+            btnPickup.setVisibility(View.VISIBLE);
+            btnReturn.setVisibility(View.VISIBLE);
+        }
+    }
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -78,6 +130,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         setOriginAddressToTextView();
 
         Driver.getInstance().registerIDriverInterface(this);
+    }
+
+    private void ShowRoute() {
+        new DirectionFinder(this, latLngStart, latLngEnd).execute();
     }
 
 
@@ -134,11 +190,78 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     public void receiveCustomerRequest(String customerRequestId) {
         //TODO:show a dialog
-        //MyHelper.toast(this, "received a booking");
-        MyHelper.toast(this, "F*ucking customer. I WILL CATCH YOU RIGHT NOWWWWW!!!!");
-        MyHelper.toast(this, "F*ucking customer. I WILL CATCH YOU RIGHT NOWWWWW!!!!");
-        MyHelper.toast(this, "F*ucking customer. I WILL CATCH YOU RIGHT NOWWWWW!!!!");
-        MyHelper.toast(this, "F*ucking customer. I WILL CATCH YOU RIGHT NOWWWWW!!!!");
-        MyHelper.toast(this, "F*ucking customer. I WILL CATCH YOU RIGHT NOWWWWW!!!!");
+       FirebaseHelper.getCustomerLocation(customerRequestId, "startLoc");
+       FirebaseHelper.getCustomerLocation(customerRequestId, "endLoc");
+
+    }
+
+    @Override
+    public void onStartLocationReady(LatLng statLoc) {
+        latLngStart = statLoc;
+        statLocReady = true;
+        if(statLocReady && endLocReady){
+            ShowRoute();
+            hideButtons(true);
+        }
+
+    }
+
+    @Override
+    public void onEndLocationReady(LatLng endLoc) {
+        latLngEnd = endLoc;
+        endLocReady = true;
+        if(statLocReady && endLocReady){
+            ShowRoute();
+            hideButtons(true);
+        }
+    }
+
+
+    @Override
+    public void onDirectionFinderStart() {
+        progressDialog = ProgressDialog.show(this, "Please wait.",
+                "Finding direction..!", true);
+        if (polylinePaths != null) {
+            for (Polyline polyline:polylinePaths ) {
+                polyline.remove();
+            }
+        }
+    }
+
+    @Override
+    public void onDirectionFinderSuccess(List<Route> routes) {
+
+        progressDialog.dismiss();
+        polylinePaths = new ArrayList<>();
+        for (Route route : routes){
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(route.bounds,200));
+
+            Marker markerOrigin = mMap.addMarker(new MarkerOptions()
+                    .position(route.startLocation)
+                    .title(route.startAddress.split(",")[0])
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.icons_location_marker_red)));
+            Marker markerDestination = mMap.addMarker(new MarkerOptions()
+                    .position(route.endLocation)
+                    .title(route.endAddress.split(",")[0])
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.icons_location_marker_blue)));
+
+            markerDestination.showInfoWindow();
+            markerOrigin.showInfoWindow();
+            PolylineOptions polylineOptions = new PolylineOptions().
+                    geodesic(true).
+                    color(Color.BLUE).
+                    width(10);
+            for(int i = 0; i < route.points.size(); i++)
+                polylineOptions.add(route.points.get(i));
+
+            polylinePaths.add(mMap.addPolyline(polylineOptions));
+
+            int price = 10000;
+            if (route.distance.value > 2000){
+                price += Math.round((route.distance.value - 2000)*3/100)*100;
+            }
+            ((TextView)findViewById(R.id.txtPriceDriver)).setText(String.valueOf(price) + "VND");
+        }
+
     }
 }

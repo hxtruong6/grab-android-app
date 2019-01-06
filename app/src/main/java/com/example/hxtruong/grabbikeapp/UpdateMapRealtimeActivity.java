@@ -53,19 +53,19 @@ public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMap
         markerDriver = null;
         initZoom = true;
         showDriverInfo();
+
     }
 
-    void updateMarkerDriver()
-    {
+    void updateMarkerDriver() {
         if (markerDriver != null)
             markerDriver.remove();
         markerDriver = mMap.addMarker(new MarkerOptions()
                 .position(posDriver)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_biker_30)));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_biker_15x43)));
     }
 
-    void updateMarkerCustomer(){
-        if (markerCustomer!= null)
+    void updateMarkerCustomer() {
+        if (markerCustomer != null)
             markerCustomer.remove();
         markerCustomer = mMap.addMarker(new MarkerOptions()
                 .position(posCustomer)
@@ -74,16 +74,16 @@ public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMap
 
     private void showDriverInfo() {
         DriverInfo driverInfo = Customer.getInstance().getDriverInfo();
-        if(!driverInfo.isEmpty()){
-            Log.d("showDriverInfo", ": "+driverInfo.name);
-            MyHelper.toast(this, driverInfo.name +"\n"+driverInfo.email+"\n"+driverInfo.vehicle);
+        if (driverInfo != null && !driverInfo.isEmpty()) {
+            Log.d("showDriverInfo", ": " + driverInfo.name);
+            MyHelper.toast(this, driverInfo.name + "\n" + driverInfo.email + "\n" + driverInfo.vehicle);
             //show driver info here
 
             final Dialog dialog = new Dialog(UpdateMapRealtimeActivity.this);
             dialog.setContentView(R.layout.dialog_infor_driver);
 
-            ((TextView)dialog.findViewById(R.id.txtDriverName)).setText(driverInfo.name);
-            ((TextView)dialog.findViewById(R.id.txtLicensePlate)).setText(driverInfo.vehicle);
+            ((TextView) dialog.findViewById(R.id.txtDriverName)).setText(driverInfo.name);
+            ((TextView) dialog.findViewById(R.id.txtLicensePlate)).setText(driverInfo.vehicle);
             Button btnOk = dialog.findViewById(R.id.btnOK);
             btnOk.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -94,8 +94,7 @@ public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMap
             dialog.show();
             dialog.getWindow().setLayout(1200, 1400);
 
-        }
-        else{
+        } else {
             MyHelper.toast(this, "driver not found!!!");
         }
     }
@@ -130,8 +129,8 @@ public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMap
     }
 
     private void ZoomMap() {
-        Log.d("xxx", "posDriver"+posDriver.toString());
-        Log.d("xxx", "posCustomer"+posCustomer.toString());
+        Log.d("xxx", "posDriver" + posDriver.toString());
+        Log.d("xxx", "posCustomer" + posCustomer.toString());
         LatLngBounds bounds = CreateBounds(posDriver, posCustomer);
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
     }
@@ -164,7 +163,7 @@ public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMap
         protected Void doInBackground(Void... voids) {
             //TODO: cập nhật vị trí tài xế và khách hàng thông qua biến posDriver và posCustomer;
 
-            while(true) //Cho đến khi tài xế tới được chỗ khách hàng hoặc tài xế bấm nút OnTrip
+            while (true) //Cho đến khi tài xế tới được chỗ khách hàng hoặc tài xế bấm nút OnTrip
             {
                 SystemClock.sleep(300);
                 posDriver = Customer.getInstance().mDriverLocation;
@@ -188,7 +187,7 @@ public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMap
     @Override
     public void onDriverLocationChanged(LatLng location) {
         //TODO: Update Driver location here :))
-        MyHelper.toast(this, "driver location changed: " + location.latitude +", "+location.longitude);
+        MyHelper.toast(this, "driver location changed: " + location.latitude + ", " + location.longitude);
     }
 
     @Override
@@ -198,6 +197,6 @@ public class UpdateMapRealtimeActivity extends FragmentActivity implements OnMap
 
     @Override
     public void onDriverInfoReady() {
-
+        showDriverInfo();
     }
 }

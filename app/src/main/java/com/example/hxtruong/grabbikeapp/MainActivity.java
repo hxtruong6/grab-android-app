@@ -64,15 +64,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         mAuth = FirebaseAuth.getInstance();
-
-        findViewById(R.id.btnChangeCustomerLoction).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Customer.getInstance().updateCustomerLocation(MyHelper.createRandomLocation());
-//                Driver.getInstance().updateDriverLocation(MyHelper.createRandomLocation());
-            }
-        });
-
     }
 
     private void startGpsService() {
@@ -240,7 +231,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             LocationListener locationListener = new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
-                    Customer.getInstance().updateCustomerLocation(new LatLng(location.getLatitude(), location.getLongitude()));
+                    Customer.getInstance().mLastKnownLocation = (new LatLng(location.getLatitude(), location.getLongitude()));
+                    Driver.getInstance().mLastKnownLocation = (new LatLng(location.getLatitude(), location.getLongitude()));
+
                     MyHelper.toast(getApplicationContext(), "Customer Location changed ON MAP!" + location.getLatitude() + ", " + location.getLongitude());
                     Log.d("xxx", "Customer location changed on map" + +location.getLatitude() + ", " + location.getLongitude());
 

@@ -85,14 +85,14 @@ public class ShowRouteActivity extends FragmentActivity implements OnMapReadyCal
         LatLng hcmus = new LatLng(10.763261, 106.682215);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hcmus, 15));
 
-        //if (parentActivity.compareTo("CUSTOMERMAP") == 0)
+        if (parentActivity.compareTo("CUSTOMERMAP") == 0)
         {
-//            LatLng temp = Customer.getInstance().mStartLocation;
-//            latLngStart = new LatLng(temp.latitude, temp.longitude);
-//            temp = Customer.getInstance().mEndLocation;
-//            latLngEnd = new LatLng(temp.latitude, temp.longitude);
-            latLngStart = new LatLng(10.7627345, 106.6822347);
-            latLngEnd = new LatLng(10.7803201, 106.6984916);
+            LatLng temp = Customer.getInstance().mStartLocation;
+            latLngStart = new LatLng(temp.latitude, temp.longitude);
+            temp = Customer.getInstance().mEndLocation;
+            latLngEnd = new LatLng(temp.latitude, temp.longitude);
+//            latLngStart = new LatLng(10.7627345, 106.6822347);
+//            latLngEnd = new LatLng(10.7803201, 106.6984916);
             Customer.getInstance().mStartLocation = latLngStart;
             Customer.getInstance().mEndLocation = latLngEnd;
             ShowRoute();

@@ -17,6 +17,7 @@ public class Driver {
         return ourInstance;
     }
     Boolean isWorking = false;
+
     private IDriverListener mListener;
 
     public LatLng mLastKnownLocation; //tracking gps
@@ -57,15 +58,23 @@ public class Driver {
             mListener.receiveCustomerRequest(customerRequestId);
     }
 
+    public void setStartLocation(double latitude, double longitude) {
+        if(mListener!=null)
+            mListener.onStartLocationReady(new LatLng(latitude, longitude));
+    }
+
+    public void setEndLocation(double latitude, double longitude) {
+        if(mListener!=null)
+            mListener.onEndLocationReady(new LatLng(latitude, longitude));
+    }
+
 
     //Interface
     public interface IDriverListener {
         void onDriverLocationChanged(LatLng loc);
         void receiveCustomerRequest(String customerRequestId);
-    }
-
-    public interface IOnGetDataDriverCallback {
-        void onGetLocationCallback(LatLng driverLoc);
+        void onStartLocationReady(LatLng statLoc);
+        void onEndLocationReady(LatLng endLoc);
     }
 
 }
