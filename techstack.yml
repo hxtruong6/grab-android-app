@@ -1,11 +1,11 @@
 repo_name: hxtruong6/grab-android-app
-report_id: dce40cd47c2c18c4f9cfd49dee9778f4
+report_id: 1e4fe8fb2b676bf6df783608a1729ef7
 repo_type: Public
-timestamp: '2023-11-14T05:13:01+00:00'
-requested_by: paquoc
+timestamp: '2023-12-14T10:37:03+00:00'
+requested_by: hxtruong6
 provider: github
 branch: master
-detected_tools_count: 6
+detected_tools_count: 8
 tools:
 - name: Java
   description: A concurrent, class-based, object-oriented, language specifically designed
@@ -27,7 +27,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Frameworks (Full Stack)
   image_url: https://img.stackshare.io/service/1010/m8jf0po4imu8t5eemjdd.png
-  detection_source_url: app/build.gradle
+  detection_source_url: https://github.com/hxtruong6/grab-android-app/blob/master/app/build.gradle
   detection_source: app/build.gradle
   last_updated_by: AnhQuoc
   last_updated_on: 2019-01-04 09:40:35.000000000 Z
@@ -60,7 +60,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Java Build Tools
   image_url: https://img.stackshare.io/service/975/gradlephant-social-black-bg.png
-  detection_source: gradlew.bat
+  detection_source: app/build.gradle
   last_updated_by: hxtruong
   last_updated_on: 2018-12-26 14:21:24.000000000 Z
 - name: Android OS
@@ -72,7 +72,47 @@ tools:
   category: Languages & Frameworks
   sub_category: Operating Systems
   image_url: https://img.stackshare.io/service/9586/ZvmtaSXW_400x400.jpg
-  detection_source_url: app/build.gradle
+  detection_source_url: https://github.com/hxtruong6/grab-android-app/blob/master/app/build.gradle
   detection_source: app/build.gradle
   last_updated_by: AnhQuoc
   last_updated_on: 2019-01-04 09:40:35.000000000 Z
+- name: com.google.code.gson:gson
+  description: Gson JSON library
+  version: 2.8.5
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Maven Packages
+  image_url: https://img.stackshare.io/package/maven/image.png
+  detection_source_url: https://github.com/hxtruong6/grab-android-app/blob/master/app/build.gradle
+  detection_source: app/build.gradle
+  last_updated_by: hxtruong
+  last_updated_on: 2019-01-05 09:40:18.000000000 Z
+  vulnerabilities:
+  - name: Deserialization of Untrusted Data in Gson
+    cve_id: CVE-2022-25647
+    cve_url: https://github.com/advisories/GHSA-4jrv-ppp4-jm57
+    detected_date: May 21
+    severity: high
+    first_patched: 2.8.9
+- name: junit:junit
+  description: JUnit is a unit testing framework for Java
+  version: '4.12'
+  license: EPL-1.0
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Maven Packages
+  image_url: https://img.stackshare.io/package/maven/image.png
+  detection_source_url: https://github.com/hxtruong6/grab-android-app/blob/master/app/build.gradle
+  detection_source: app/build.gradle
+  last_updated_by: hxtruong
+  last_updated_on: 2018-12-26 14:21:24.000000000 Z
+  vulnerabilities:
+  - name: TemporaryFolder on unix-like systems does not limit access to created files
+    cve_id: CVE-2020-15250
+    cve_url: https://github.com/advisories/GHSA-269g-pwp5-87pp
+    detected_date: Aug 22
+    severity: moderate
+    first_patched: 4.13.1
